@@ -7,6 +7,9 @@ import java.time.Period;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class DateOfBirthday {
     private LocalDate dateOfBirthday;
     private LocalDate currentDate = LocalDate.now();
