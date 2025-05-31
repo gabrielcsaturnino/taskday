@@ -56,22 +56,20 @@ public class Address {
     @Column(name = "zip_code", nullable = false, length = 10)
     private String zipCode;
 
-    @Enumerated(EnumType.STRING) // Ou apenas @Column(name = "owner_type") se usar String diretamente
+    @Enumerated(EnumType.STRING) 
     @Column(name = "owner_type", nullable = false, length = 30)
     private AddressOwnerType ownerType;
 
-    // Relacionamento com Client
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_client", referencedColumnName = "id_client") // FK na tabela address
+    @JoinColumn(name = "id_client", referencedColumnName = "id_client") 
     private Client client;
 
-    // Relacionamento com Contractor
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_contractor", referencedColumnName = "id_contractor") // FK na tabela address
+    @JoinColumn(name = "id_contractor", referencedColumnName = "id_contractor") 
     private Contractor contractor;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_job", referencedColumnName = "id_job") // FK na tabela address
+    @JoinColumn(name = "id_job", referencedColumnName = "id_job") 
     private Job job;
     
     @CreationTimestamp
@@ -82,7 +80,6 @@ public class Address {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Construtor para endereço de Cliente
     public Address(String street, String number, String neighborhood, String city, String state, String zipCode, Client client) {
         this.street = street;
         this.number = number;
@@ -94,7 +91,6 @@ public class Address {
         this.ownerType = AddressOwnerType.CLIENT;
     }
 
-    // Construtor para endereço de Prestador
     public Address(String street, String number, String neighborhood, String city, String state, String zipCode, Contractor contractor) {
         this.street = street;
         this.number = number;

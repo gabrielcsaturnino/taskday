@@ -55,6 +55,7 @@ public class Client {
     private List<Address> addresses;
 
     @Embedded
+    @Column(name = "date_of_birthday", nullable = false)
     private DateOfBirthday dateOfBirthday;
     
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)

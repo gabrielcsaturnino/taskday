@@ -43,6 +43,7 @@ public class Job {
     @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
+
     @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
