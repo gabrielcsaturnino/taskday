@@ -3,7 +3,6 @@ package com.example.taskday.domain.model.auxiliary;
 import java.util.regex.Pattern;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Id;
 
 @Embeddable
 public class Email {

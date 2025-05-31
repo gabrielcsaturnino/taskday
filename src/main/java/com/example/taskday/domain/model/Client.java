@@ -1,17 +1,10 @@
 package com.example.taskday.domain.model;
-
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.aot.generate.GenerationContext;
-
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
 import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
 import com.example.taskday.domain.model.auxiliary.Phone;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -68,8 +61,6 @@ public class Client {
     private List<Job> jobs;
 
     
-
-
     public Client(){}
 
     public Client(String first_name, String last_name, Phone phone, Email email, Cpf cpf, String password, boolean status_account, String rg_doc, List<Address> addresses, DateOfBirthday dateOfBirthday) {

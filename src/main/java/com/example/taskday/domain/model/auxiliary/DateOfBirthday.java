@@ -1,11 +1,8 @@
 package com.example.taskday.domain.model.auxiliary;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Embeddable;
 

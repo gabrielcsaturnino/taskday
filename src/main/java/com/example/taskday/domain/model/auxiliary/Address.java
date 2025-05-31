@@ -7,9 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskday.domain.model.Client;
 import com.example.taskday.domain.model.Contractor;
+import com.example.taskday.domain.model.Job;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,12 +19,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
 enum AddressOwnerType {
     CLIENT,
-    CONTRACTOR
+    CONTRACTOR,
+    JOB
 }
 
 @Entity
@@ -68,6 +70,10 @@ public class Address {
     @JoinColumn(name = "id_contractor", referencedColumnName = "id_contractor") // FK na tabela address
     private Contractor contractor;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_job", referencedColumnName = "id_job") // FK na tabela address
+    private Job job;
+    
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -98,5 +104,16 @@ public class Address {
         this.zipCode = zipCode;
         this.contractor = contractor;
         this.ownerType = AddressOwnerType.CONTRACTOR;
+    }
+
+    public Address(String street, String number, String neighborhood, String city, String state, String zipCode, Job job) {
+        this.street = street;
+        this.number = number;
+        this.neighborhood = neighborhood;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.job = job; // Associa o job
+        this.ownerType = AddressOwnerType.JOB; // Define o tipo de dono
     }
 }

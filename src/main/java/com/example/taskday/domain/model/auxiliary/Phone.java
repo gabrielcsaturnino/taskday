@@ -36,12 +36,7 @@ private static final String PHONE_REGEX =
     }
 
 
-    /**
-     * Validates the phone number format.
-     *
-     * @param phoneNumber the phone number to validate
-     * @return true if the phone number is valid, false otherwise
-     */
+
 
     public boolean isValidPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
