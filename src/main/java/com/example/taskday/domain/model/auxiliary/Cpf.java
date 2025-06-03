@@ -2,10 +2,12 @@ package com.example.taskday.domain.model.auxiliary;
 
 import java.util.regex.Pattern;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Cpf {
+    @Column(name = "cpf_client", nullable = false, unique = true, length = 11)
     private String value;
     private final static String CPF_REGEX = "^(?:\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\d{11})$";
     private final static Pattern CPF_PATTERN = Pattern.compile(CPF_REGEX);

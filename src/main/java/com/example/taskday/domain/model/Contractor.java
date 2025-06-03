@@ -1,6 +1,10 @@
 package com.example.taskday.domain.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
@@ -8,6 +12,7 @@ import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
 import com.example.taskday.domain.model.auxiliary.Phone;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -33,20 +38,14 @@ public class Contractor {
 
 
     @Embedded
-    @Column(name = "phone", nullable = false)
     private Phone phone;
     
     @Embedded
-    @Column(name = "email", nullable = false, unique = true)
     private Email email;
 
     @Embedded
-    @Column(name = "cpf_contractor", nullable = false, unique = true)
     private Cpf cpf;
     
-    @Embedded
-    @Column(name = "date_of_birthday", nullable = false)
-    private DateOfBirthday dateOfBirthday;
 
     @Column(name = "hash_password", nullable = false)
     private String password;
@@ -60,10 +59,23 @@ public class Contractor {
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "date_of_birth", nullable = false))
+    private DateOfBirthday dateOfBirthday;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime created_at;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updated_at;
+
     
 
     public Contractor() {}
-    public Contractor(String first_name, String last_name, Phone phone, Email email, Cpf cpf, String password, boolean status_account, String rg_doc, List<Address> addresses, DateOfBirthday dateOfBirthday) {
+    public Contractor(String first_name, String last_name, Phone phone, Email email, Cpf cpf, String password, boolean status_account, String rg_doc, DateOfBirthday dateOfBirthday) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.phone = phone;
@@ -72,7 +84,13 @@ public class Contractor {
         this.password = password;
         this.status_account = status_account;
         this.rg_doc = rg_doc;
-        this.addresses = addresses;
         this.dateOfBirthday = dateOfBirthday;
+    }
+
+    public void addAddress(Address address){
+        if(address != null) {
+            address.setContractor(this);
+            this.addresses.add(address);
+        }
     }
 }

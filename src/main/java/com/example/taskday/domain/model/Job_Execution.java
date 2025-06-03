@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -23,11 +24,11 @@ public class Job_Execution {
     @Column(name = "id_execution")
     private Long id;
 
-    @Column(name = "id_job", nullable = false)
+    @JoinColumn(name = "id_job", nullable = false)
     @ManyToOne
     private Job job;
 
-    @Column(name = "id_contractor", nullable = false)
+    @JoinColumn(name = "id_contractor", nullable = false)
     @ManyToOne
     private Contractor contractor;
 

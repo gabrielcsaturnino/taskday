@@ -3,19 +3,26 @@ package com.example.taskday.domain.model.auxiliary;
 import java.time.LocalDate;
 import java.time.Period;
 
+import org.springframework.data.annotation.Transient;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class DateOfBirthday {
+    
+    @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirthday;
+    @jakarta.persistence.Transient
     private LocalDate currentDate = LocalDate.now();
-    private Period period = Period.between(dateOfBirthday, currentDate);
+    @jakarta.persistence.Transient
+    private Period period;
 
     
     public DateOfBirthday() {}
 
     public DateOfBirthday(LocalDate dateOfBirthday) {
+        period = Period.between(dateOfBirthday, currentDate);
         checkYear(dateOfBirthday);
         this.dateOfBirthday = dateOfBirthday;
     }

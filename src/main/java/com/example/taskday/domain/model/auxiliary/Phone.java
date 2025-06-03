@@ -2,10 +2,12 @@ package com.example.taskday.domain.model.auxiliary;
 
 import java.util.regex.Pattern;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Phone {
+    @Column(name = "phone", nullable = false, unique = true)
     private String phoneNumber;
 private static final String PHONE_REGEX =
             "^(?:\\+55\\s?)?(?:\\(?([1-9][0-9])\\)?\\s?)?(9[0-9]{4}[-\\s]?[0-9]{4})$";

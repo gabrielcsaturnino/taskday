@@ -1,0 +1,1 @@
+ALTER TABLE client ALTER COLUMN cpf_client TYPE VARCHAR(14);

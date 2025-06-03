@@ -79,6 +79,8 @@ public class Address {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+    
+   
 
     public Address(String street, String number, String neighborhood, String city, String state, String zipCode, Client client) {
         this.street = street;
@@ -112,4 +114,24 @@ public class Address {
         this.job = job; // Associa o job
         this.ownerType = AddressOwnerType.JOB; // Define o tipo de dono
     }
+
+    public Address() {
+
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+        this.ownerType = AddressOwnerType.CLIENT;
+    }
+
+    public void setContractor(Contractor contractor) {
+        this.contractor = contractor;
+        this.ownerType = AddressOwnerType.CONTRACTOR;
+    }
+    public void setJob(Job job) {
+        this.job = job;
+        this.ownerType = AddressOwnerType.JOB;
+    }
+
+
 }

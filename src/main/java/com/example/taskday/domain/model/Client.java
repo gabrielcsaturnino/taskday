@@ -1,10 +1,19 @@
 package com.example.taskday.domain.model;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
 import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
 import com.example.taskday.domain.model.auxiliary.Phone;
+
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -30,15 +39,12 @@ public class Client {
     private String last_name;
 
     
-    @Column(name = "phone", nullable = false)
     @Embedded
     private Phone phone;
     
-    @Column(name = "email", nullable = false)
     @Embedded
     private Email email;
     
-    @Column(name = "cpf_client", nullable = false, unique = true)
     @Embedded
     private Cpf cpf;
     
@@ -52,19 +58,28 @@ public class Client {
     private String rg_doc;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     @Embedded
-    @Column(name = "date_of_birthday", nullable = false)
+    @AttributeOverride(name = "value", column = @Column(name = "date_of_birth", nullable = false))
     private DateOfBirthday dateOfBirthday;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime created_at;
     
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updated_at;
+    
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> jobs;
 
     
     public Client(){}
 
-    public Client(String first_name, String last_name, Phone phone, Email email, Cpf cpf, String password, boolean status_account, String rg_doc, List<Address> addresses, DateOfBirthday dateOfBirthday) {
+    public Client(String first_name, String last_name, Phone phone, Email email, Cpf cpf, String password, boolean status_account, String rg_doc, DateOfBirthday dateOfBirthday) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.phone = phone;
@@ -73,15 +88,26 @@ public class Client {
         this.password = password;
         this.status_account = status_account;
         this.rg_doc = rg_doc;
-        this.addresses = addresses;
         this.dateOfBirthday = dateOfBirthday;
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
     }
 
 
-    
+
+    public void addAddress(Address address) {
+        if (address != null) {
+            this.addresses.add(address);
+            address.setClient(this); // Set the client in the address
+        }
+    }
 
 
 
+
+    public Long getId() {
+        return id;
+    }
 
 
 
