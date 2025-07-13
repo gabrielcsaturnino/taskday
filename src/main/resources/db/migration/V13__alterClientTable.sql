@@ -1,0 +1,2 @@
+ALTER TABLE CLIENT
+RENAME COLUMN rg_client TO rg_doc;

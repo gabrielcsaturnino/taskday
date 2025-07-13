@@ -1,0 +1,2 @@
+ALTER TABLE CONTRACTOR
+RENAME COLUMN rg_contractor TO rg_doc;

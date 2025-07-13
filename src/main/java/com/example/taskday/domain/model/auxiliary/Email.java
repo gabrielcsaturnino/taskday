@@ -33,4 +33,8 @@ public class Email {
         }
         return EMAIL_PATTERN.matcher(email).matches();
     }
+
+    public String getEmail() {
+        return email;
+    }
 }

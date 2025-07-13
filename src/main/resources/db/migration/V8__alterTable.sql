@@ -1,0 +1,2 @@
+ALTER TABLE CONTRACTOR
+RENAME COLUMN user_id TO id_contractor;

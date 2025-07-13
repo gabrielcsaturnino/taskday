@@ -12,8 +12,6 @@ import jakarta.persistence.Table;
 
 enum application_status_enum {
     submitted,
-    viewed,
-    shortlisted,
     rejected,
     accepted
 }
@@ -30,12 +28,23 @@ public class Job_Application {
     @ManyToOne
     @JoinColumn(name = "id_job")
     private Job job;
-    
+
     @ManyToOne
     @JoinColumn(name = "id_contractor")
     private Contractor contractor;
 
     @Column(name = "status_application", nullable = false)
     private application_status_enum statusApplication;
+
+    public Job_Application() {}
+    public Job_Application(Job job, Contractor contractor, application_status_enum statusApplication) {
+        if (job.getStatusJob() == job_status_enum.INACTIVE) {
+            throw new IllegalArgumentException("Cannot apply for an inactive job.");
+        }
+        
+        this.job = job;
+        this.contractor = contractor;
+        this.statusApplication = statusApplication;
+    }
     
 }
