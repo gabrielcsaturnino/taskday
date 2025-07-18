@@ -1,14 +1,11 @@
 package com.example.taskday.domain.controller;
 
-import com.example.taskday.domain.exception.PasswordException;
-import com.example.taskday.domain.model.Client;
 import com.example.taskday.domain.model.Contractor;
-import com.example.taskday.domain.model.User;
 import com.example.taskday.domain.model.auxiliary.*;
-import com.example.taskday.domain.repositories.ClientRepository;
 import com.example.taskday.domain.repositories.ContractorRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/main")
+@Profile("!test") // This controller is not active in the "test" profile
 public class MainController {
 
     @Autowired
@@ -32,7 +30,7 @@ public class MainController {
     
          String firstName = "Fulano";
          String lastName = "De Tal";
-         Password passwordHash = new Password("senhaSegura123"); // This should be encoded using passwordEncoder
+         Password passwordHash = new Password("senhaSegura123#"); // This should be encoded using passwordEncoder
          boolean isActiveAccount = true;
          String rgDocument = "3456789";
 

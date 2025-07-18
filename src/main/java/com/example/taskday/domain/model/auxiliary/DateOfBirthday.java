@@ -3,7 +3,6 @@ package com.example.taskday.domain.model.auxiliary;
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.springframework.data.annotation.Transient;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

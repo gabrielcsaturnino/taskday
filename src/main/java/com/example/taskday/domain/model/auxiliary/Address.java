@@ -133,5 +133,20 @@ public class Address {
         this.ownerType = AddressOwnerType.JOB;
     }
 
+    public AddressOwnerType getOwnerType() {
+        return ownerType;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Contractor getContractor() {
+        return contractor;
+    }
 
 }

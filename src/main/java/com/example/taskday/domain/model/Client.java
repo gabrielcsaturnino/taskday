@@ -1,11 +1,7 @@
 package com.example.taskday.domain.model;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
@@ -14,10 +10,8 @@ import com.example.taskday.domain.model.auxiliary.Email;
 import com.example.taskday.domain.model.auxiliary.Password;
 import com.example.taskday.domain.model.auxiliary.Phone;
 
-import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -1,6 +1,5 @@
 package com.example.taskday.domain.model.auxiliary;
 
-import javax.swing.SpringLayout.Constraints;
 
 import com.example.taskday.domain.exception.PasswordException;
 

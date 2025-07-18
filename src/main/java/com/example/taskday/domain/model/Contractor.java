@@ -35,7 +35,7 @@ public class Contractor extends User {
     private List<Address> addresses = new ArrayList<>();
 
     @Column(name = "avarage_rating", nullable = false, columnDefinition = "DECIMAL(2,1)")
-    private double avarageRating = 0.0;
+    private double avarageRating = 5.0;
 
 
     public Contractor() {
@@ -63,6 +63,10 @@ public class Contractor extends User {
 
     public double getAvarageRating() {
         return avarageRating;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     

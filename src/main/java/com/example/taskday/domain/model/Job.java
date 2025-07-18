@@ -29,17 +29,17 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "title", nullable = false, length = 100)
+    @Column(name = "job_title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "job_description", nullable = false)
     private String description;
 
     @Column(name = "job_salary", nullable = false)
     private int pricePerHour;
     
-    @Column(name = "status_job", nullable = false)
-    private job_status_enum statusJob;
+    @Column(name = "job_status", nullable = false)
+    private job_status_enum jobStatus;
     
     @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
@@ -51,14 +51,14 @@ public class Job {
 
 
     public Job() {
-        this.statusJob = job_status_enum.INACTIVE;
+        this.jobStatus = job_status_enum.INACTIVE;
     }
 
-    public Job(String title, String description, int pricePerHour, job_status_enum statusJob, Client client) {
+    public Job(String title, String description, int pricePerHour, Client client) {
         setTitle(title);
         setDescription(description);
         setPricePerHour(pricePerHour);
-        setStatusJob(statusJob);
+        setJobStatus(jobStatus.ACTIVE);
         this.client = client;
     }
 
@@ -72,11 +72,11 @@ public class Job {
 
 
     
-    public void setStatusJob(job_status_enum status_job){
-        if (this.statusJob == status_job) {
+    public void setJobStatus(job_status_enum jobStatus){
+        if (this.jobStatus == jobStatus) {
             return;   
         }
-        this.statusJob = status_job;
+        this.jobStatus = jobStatus;
     }
 
     public void setPricePerHour(int pricePerHour) {
@@ -100,8 +100,12 @@ public class Job {
         this.title = title;
     }
 
-    public job_status_enum getStatusJob() {
-        return statusJob;
+    public job_status_enum getJobStatus() {
+        return jobStatus;
+    }
+
+    public String getTitle() {
+        return title;
     }
    
 

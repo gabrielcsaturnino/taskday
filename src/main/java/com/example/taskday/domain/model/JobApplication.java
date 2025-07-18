@@ -1,5 +1,7 @@
 package com.example.taskday.domain.model;
 
+import com.example.taskday.domain.enums.JobApplicationStatusEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ enum application_status_enum {
 
 @Entity
 @Table(name = "client_job_applications")
-public class Job_Application {
+public class JobApplication {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,17 +36,37 @@ public class Job_Application {
     private Contractor contractor;
 
     @Column(name = "status_application", nullable = false)
-    private application_status_enum statusApplication;
+    private JobApplicationStatusEnum statusApplication;
 
-    public Job_Application() {}
-    public Job_Application(Job job, Contractor contractor, application_status_enum statusApplication) {
-        if (job.getStatusJob() == job_status_enum.INACTIVE) {
-            throw new IllegalArgumentException("Cannot apply for an inactive job.");
-        }
-        
+    public JobApplication() {}
+    public JobApplication(Job job, Contractor contractor) {
         this.job = job;
         this.contractor = contractor;
-        this.statusApplication = statusApplication;
+        this.statusApplication = statusApplication.SUBMITTED;
     }
     
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public Contractor getContractor() {
+        return contractor;
+    }
+
+    public JobApplicationStatusEnum getStatusApplication() {
+        return statusApplication;
+    }
+
+    public void setStatusApplication(JobApplicationStatusEnum statusApplication) {
+        this.statusApplication = statusApplication;
+    }
+
 }
+
+
