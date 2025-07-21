@@ -63,7 +63,11 @@ public class JobApplication {
         return statusApplication;
     }
 
+
     public void setStatusApplication(JobApplicationStatusEnum statusApplication) {
+        if (statusApplication == null) {
+            throw new IllegalArgumentException("Status application cannot be null");
+        }
         this.statusApplication = statusApplication;
     }
 

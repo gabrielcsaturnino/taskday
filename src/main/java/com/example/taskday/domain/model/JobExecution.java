@@ -34,7 +34,7 @@ public class JobExecution {
     private boolean statusExecution = false;
 
     @Column(name = "avarage_rating_job", nullable = false, columnDefinition = "DECIMAL(2,1)")
-    private double avarageRating = 0.0;
+    private double rating = 0.0;
 
     @ManyToOne
     @JoinColumn(name = "id_application", nullable = false)
@@ -60,9 +60,6 @@ public class JobExecution {
     public JobExecution() {}
 
     public JobExecution(JobApplication jobApplication) {
-        if (jobApplication.getStatusApplication() != JobApplicationStatusEnum.ACCEPTED) {
-            throw new IllegalArgumentException("Job application must be accepted to create a job execution.");
-        }
         this.job = jobApplication.getJob();
         this.contractor = jobApplication.getContractor();
         this.status = JobExecutionStatusEnum.PENDING;
@@ -74,7 +71,7 @@ public class JobExecution {
     public Contractor getContractor() { return contractor; }
     public JobExecutionStatusEnum getStatus() { return status; }
     public boolean isStatusExecution() { return statusExecution; }
-    public double getAvarageRating() { return avarageRating; }
+    public double getRating() { return rating; }
     public JobApplication getJobApplication() { return jobApplication; }
     public LocalDateTime getCreated_at() { return created_at; }
     public LocalDateTime getUpdated_at() { return updated_at; }
@@ -82,9 +79,14 @@ public class JobExecution {
     public LocalDateTime getIn_progress_at() { return in_progress_at; }
     public BigInteger getTotalTime() { return totalTime; }
 
-    public void setStatus(JobExecutionStatusEnum status) { this.status = status; }
+    public void setStatus(JobExecutionStatusEnum status) {
+        if (status == null) {
+            throw new IllegalArgumentException("New status cannot be null");
+        }
+        this.status = status;
+    }
     public void setStatusExecution(boolean statusExecution) { this.statusExecution = statusExecution; }
-    public void setAvarageRating(double avarageRating) { this.avarageRating = avarageRating; }
+    public void setRating(double rating) {this.rating = rating;}
     public void setCompleted_at(LocalDateTime completed_at) { this.completed_at = completed_at; }
     public void setIn_progress_at(LocalDateTime in_progress_at) { this.in_progress_at = in_progress_at; }
     public void setTotalTime(BigInteger totalTime) { this.totalTime = totalTime; }

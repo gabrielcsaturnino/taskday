@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/main")
-@Profile("!test") // This controller is not active in the "test" profile
+@Profile("!test")
 public class MainController {
 
     @Autowired

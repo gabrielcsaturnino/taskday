@@ -10,9 +10,11 @@ import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
 import com.example.taskday.domain.model.auxiliary.Password;
 import com.example.taskday.domain.model.auxiliary.Phone;
+import com.example.taskday.domain.model.auxiliary.Rating;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +36,8 @@ public class Contractor extends User {
     @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> addresses = new ArrayList<>();
 
-    @Column(name = "avarage_rating", nullable = false, columnDefinition = "DECIMAL(2,1)")
-    private double avarageRating = 5.0;
+    @Embedded
+    private Rating avarageRating = new Rating(5.0);
 
 
     public Contractor() {
@@ -46,7 +48,7 @@ public class Contractor extends User {
     }
 
     public void setAddress(Address address){
-         if (address == null) {
+        if (address == null) {
             throw new IllegalArgumentException("Address cannot be null");
         }
         addresses.add(address);
@@ -54,15 +56,15 @@ public class Contractor extends User {
     }
 
 
-    public void setAvarageRating(double newAvarageRating) {
-        if (newAvarageRating < 0.0 || newAvarageRating > 5.0) {
-            throw new IllegalArgumentException("Average rating must be between 0.0 and 5.0");
+    public void setAvarageRating(Rating newRating) {
+        if (newRating == null) {
+            throw new IllegalArgumentException("Rating cannot be null");   
         }
-        this.avarageRating = newAvarageRating;
+        this.avarageRating = newRating.setValue(this.avarageRating, 0.2);
     }
 
     public double getAvarageRating() {
-        return avarageRating;
+        return avarageRating.getValue();
     }
 
     public Long getId() {
