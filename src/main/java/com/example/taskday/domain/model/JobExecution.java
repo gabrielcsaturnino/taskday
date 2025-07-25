@@ -2,6 +2,7 @@ package com.example.taskday.domain.model;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.example.taskday.domain.enums.JobApplicationStatusEnum;
 import com.example.taskday.domain.enums.JobExecutionStatusEnum;
 
+import io.micrometer.common.lang.internal.Contract;
 import jakarta.persistence.*;
 
 @Entity
@@ -23,9 +25,18 @@ public class JobExecution {
     @JoinColumn(name = "id_job", nullable = false)
     private Job job;
 
+    @ManyToMany
+    @JoinTable(
+        name = "job_execution_contractor", // Nome da tabela de ligação
+        joinColumns = @JoinColumn(name = "job_execution_id"), // Chave desta entidade
+        inverseJoinColumns = @JoinColumn(name = "contractor_id") // Chave da outra entidade
+    )
+    private List<Contractor> contractors;
+    
     @ManyToOne
-    @JoinColumn(name = "id_contractor", nullable = false)
-    private Contractor contractor;
+    @JoinColumn(name = "id_contractor_leader", nullable = false)
+    private Contractor contractorLeader;
+
 
     @Column(name = "status", nullable = false)
     private JobExecutionStatusEnum status;
@@ -36,9 +47,6 @@ public class JobExecution {
     @Column(name = "avarage_rating_job", nullable = false, columnDefinition = "DECIMAL(2,1)")
     private double rating = 0.0;
 
-    @ManyToOne
-    @JoinColumn(name = "id_application", nullable = false)
-    private JobApplication jobApplication;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -59,20 +67,20 @@ public class JobExecution {
 
     public JobExecution() {}
 
-    public JobExecution(JobApplication jobApplication) {
-        this.job = jobApplication.getJob();
-        this.contractor = jobApplication.getContractor();
+    public JobExecution(List<Contractor> contractors, Job job) {
+        this.job = job;
+        this.contractors = contractors;
+        this.contractorLeader = contractors.get(0);
+        // LIST DE CONTRACTOR (UM JOB EXECUTION PODE CONTER VARIOS TRABALHADORES)
         this.status = JobExecutionStatusEnum.PENDING;
-        this.jobApplication = jobApplication;
     }
 
     public Long getId() { return id; }
     public Job getJob() { return job; }
-    public Contractor getContractor() { return contractor; }
+    public List<Contractor> getContractor() { return contractors; }
     public JobExecutionStatusEnum getStatus() { return status; }
     public boolean isStatusExecution() { return statusExecution; }
     public double getRating() { return rating; }
-    public JobApplication getJobApplication() { return jobApplication; }
     public LocalDateTime getCreated_at() { return created_at; }
     public LocalDateTime getUpdated_at() { return updated_at; }
     public LocalDateTime getCompleted_at() { return completed_at; }
@@ -90,4 +98,5 @@ public class JobExecution {
     public void setCompleted_at(LocalDateTime completed_at) { this.completed_at = completed_at; }
     public void setIn_progress_at(LocalDateTime in_progress_at) { this.in_progress_at = in_progress_at; }
     public void setTotalTime(BigInteger totalTime) { this.totalTime = totalTime; }
+    public Contractor getContractorLeader() {return contractorLeader;}
 }

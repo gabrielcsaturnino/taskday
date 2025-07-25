@@ -101,33 +101,28 @@ public class JobLifecycleIT {
         Optional<Contractor> contractor = contractorRepository.findByEmail(new Email("jhonDoe@gmail.com"));
         List<Job> jobs = jobRepository.findAll();
         JobApplication jobApplication = jobApplicationService.createJobApplication(jobs.get(0).getId(), contractor.get().getId());
-        jobApplicationRepository.save(jobApplication);
         
         assert jobApplicationRepository.findAllByContractorId(contractor.get().getId()).get(0).getStatusApplication() == JobApplicationStatusEnum.SUBMITTED; 
         Exception ex = assertThrows(InvalidStatusException.class, () -> jobExecutionService.createJobExecution(jobApplication.getId()));
         assert ex.getMessage().equals("Job application must be accepted to create a job execution.");
         
         jobApplicationService.updateStatus(jobApplication.getId() ,JobApplicationStatusEnum.ACCEPTED);
-        jobApplicationRepository.save(jobApplication);
         JobExecution jobExecution = jobExecutionService.createJobExecution(jobApplication.getId());
-        jobExecutionRepository.save(jobExecution);
         assert jobExecutionRepository.findAllByContractorId(contractor.get().getId()).get(0).getStatus() == JobExecutionStatusEnum.PENDING;
 
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.IN_PROGRESS);
-        jobExecutionRepository.save(jobExecution);
 
         assert jobExecutionRepository.findAllByContractorId(contractor.get().getId()).get(0).getIn_progress_at() != null;
         Exception ex2 = assertThrows(InvalidStatusException.class, () -> jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5));
         assert ex2.getMessage().equals("Job execution must be completed to update the average rating.");
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.COMPLETED);
         jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5);
-        jobExecutionRepository.save(jobExecution);
         contractorRepository.save(contractor.get());
-
+        assert jobExecutionRepository.findAllContractorByExecutionId(jobExecution.getId()).get(0) == jobExecution.getContractorLeader().getId();
         assert contractorRepository.findById(contractor.get().getId()).get().getAvarageRating() == 4.9;
+        System.out.println("id do contractor:" + contractor.get().getId());
         List<JobExecution> jobExecutions = jobExecutionRepository.findAllCompletedByContractorId(contractor.get().getId());
         assert jobExecutions.size() == 1;
-
 
     }
 
@@ -138,18 +133,14 @@ public class JobLifecycleIT {
         Optional<Contractor> contractor = contractorRepository.findByEmail(new Email("jhonDoe@gmail.com"));
         List<Job> jobs = jobRepository.findAll();
         JobApplication jobApplication = jobApplicationService.createJobApplication(jobs.get(0).getId(), contractor.get().getId());
-        jobApplicationRepository.save(jobApplication);
 
         jobApplicationService.updateStatus(jobApplication.getId(), JobApplicationStatusEnum.ACCEPTED);
-        jobApplicationRepository.save(jobApplication);
 
 
         JobExecution jobExecution = jobExecutionService.createJobExecution(jobApplication.getId());
-        jobExecutionRepository.save(jobExecution);
 
         assert jobExecutionRepository.findAllByContractorId(contractor.get().getId()).get(0).getStatus() == JobExecutionStatusEnum.PENDING;
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.CANCELLED);
-        jobExecutionRepository.save(jobExecution);
         assert jobExecutionRepository.findAllByContractorId(contractor.get().getId()).get(0).getStatus() == JobExecutionStatusEnum.CANCELLED;
         Exception ex = assertThrows(InvalidStatusException.class,  () -> jobExecutionService.updateAvarageRating(jobExecution.getId(), 0));
         assert ex.getMessage().equals("Job execution must be completed to update the average rating.");

@@ -2,6 +2,8 @@ package com.example.taskday.domain.service;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,12 @@ import com.example.taskday.domain.enums.JobApplicationStatusEnum;
 import com.example.taskday.domain.enums.JobExecutionStatusEnum;
 import com.example.taskday.domain.exception.InvalidStatusException;
 import com.example.taskday.domain.exception.NotFoundException;
+import com.example.taskday.domain.model.Contractor;
 import com.example.taskday.domain.model.Job;
 import com.example.taskday.domain.model.JobApplication;
 import com.example.taskday.domain.model.JobExecution;
 import com.example.taskday.domain.model.auxiliary.Rating;
+import com.example.taskday.domain.repositories.ContractorRepository;
 import com.example.taskday.domain.repositories.JobApplicationRepository;
 import com.example.taskday.domain.repositories.JobExecutionRepository;
 
@@ -25,6 +29,11 @@ public class JobExecutionService {
 
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
+
+    @Autowired
+    private ContractorRepository contractorRepository;
+
+    
 
     /**
      * create the JobExecution by jobApplication
@@ -40,7 +49,11 @@ public class JobExecutionService {
             throw new InvalidStatusException("Job application must be accepted to create a job execution.");
         }
 
-        JobExecution jobExecution = new JobExecution(jobApplication);
+        List<Contractor> contractors = new ArrayList<>();
+        contractors.add(jobApplication.getContractor());
+        Job job = jobApplication.getJob();
+
+        JobExecution jobExecution = new JobExecution(contractors, job);
         jobExecutionRepository.save(jobExecution);
         return jobExecution;
         
@@ -90,6 +103,8 @@ public class JobExecutionService {
             }
             
         }
+
+        jobExecutionRepository.save(jobExecution);
     }
     
 
@@ -106,6 +121,10 @@ public class JobExecutionService {
         JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
                   .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
         
+                
+        List<Long> contractorsId = jobExecutionRepository.findAllContractorByExecutionId(jobExecutionId);
+        List<Contractor> contractors = contractorRepository.findAllById(contractorsId);
+
         if (rating < 0 || rating > 5) {
             throw new InvalidStatusException("Average rating must be between 0 and 5");
         }
@@ -114,7 +133,13 @@ public class JobExecutionService {
             throw new InvalidStatusException("Job execution must be completed to update the average rating.");    
         }
         Rating newRating = new Rating(rating);
-        jobExecution.getContractor().setAvarageRating(newRating);
+        for(Contractor contractor : contractors) {
+            contractor.setAvarageRating(newRating);
+            contractorRepository.save(contractor);
+        }
         jobExecution.setRating(rating);
+        jobExecutionRepository.save(jobExecution);
     }
+
+    
 }

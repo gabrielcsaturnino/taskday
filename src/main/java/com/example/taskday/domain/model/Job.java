@@ -51,14 +51,13 @@ public class Job {
 
 
     public Job() {
-        this.jobStatus = job_status_enum.INACTIVE;
     }
 
     public Job(String title, String description, int pricePerHour, Client client) {
-        setTitle(title);
-        setDescription(description);
-        setPricePerHour(pricePerHour);
-        setJobStatus(jobStatus.ACTIVE);
+        this.title = title;
+        this.description = description;
+        this.pricePerHour = pricePerHour;
+        this.jobStatus = job_status_enum.ACTIVE;
         this.client = client;
     }
 

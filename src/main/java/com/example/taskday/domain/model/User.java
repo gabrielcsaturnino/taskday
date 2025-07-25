@@ -18,8 +18,6 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class User {
 
-    
-    
     @Column(name = "first_name", nullable = false)
     private String first_name;
     @Column(name = "last_name", nullable = false)
