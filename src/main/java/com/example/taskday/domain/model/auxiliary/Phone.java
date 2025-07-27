@@ -2,6 +2,9 @@ package com.example.taskday.domain.model.auxiliary;
 
 import java.util.regex.Pattern;
 
+import com.example.taskday.domain.exception.InvalidFormatException;
+import com.example.taskday.domain.exception.SaveNullObjectException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -19,32 +22,31 @@ private static final String PHONE_REGEX =
     }
 
     public Phone(String phoneNumber) {
-        if (isValidPhoneNumber(phoneNumber)) {
-            this.phoneNumber = phoneNumber;
-        } else {
-            throw new IllegalArgumentException("Invalid phone number format: " + phoneNumber);
-        }
+        isValidPhoneNumber(phoneNumber);
+        this.phoneNumber = phoneNumber;
+
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
     public void setPhoneNumber(String phoneNumber) {
-        if (isValidPhoneNumber(phoneNumber)) {
-            this.phoneNumber = phoneNumber;
-        } else {
-            throw new IllegalArgumentException("Invalid phone number format: " + phoneNumber);
-        }
+        isValidPhoneNumber(phoneNumber);
+        this.phoneNumber = phoneNumber;
     }
 
 
 
 
-    public boolean isValidPhoneNumber(String phoneNumber) {
+    public void isValidPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
-            return false;
+            throw new InvalidFormatException("Number cannot be null");
         }
-        return PHONE_PATTERN.matcher(phoneNumber).matches();
+
+        if (PHONE_PATTERN.matcher(phoneNumber).matches() == false) {
+            throw new InvalidFormatException("Invalid phone number format: " + phoneNumber);
+        }
+
     }
 
 

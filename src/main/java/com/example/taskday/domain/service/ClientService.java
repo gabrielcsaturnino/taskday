@@ -1,53 +1,45 @@
 package com.example.taskday.domain.service;
 
-import java.time.LocalDate;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.taskday.domain.exception.DuplicateFieldException;
-import com.example.taskday.domain.exception.NotFoundException;
-import com.example.taskday.domain.model.Contractor;
+import com.example.taskday.domain.model.Client;
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
-import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
-import com.example.taskday.domain.model.auxiliary.Password;
 import com.example.taskday.domain.model.auxiliary.Phone;
 import com.example.taskday.domain.model.builders.AddressBuilder;
-import com.example.taskday.domain.model.builders.ContractorBuilder;
+import com.example.taskday.domain.model.builders.ClientBuilder;
 import com.example.taskday.domain.model.dtos.CreateAddressRequestDTO;
-import com.example.taskday.domain.model.dtos.CreateContractorRequestDTO;
+import com.example.taskday.domain.model.dtos.CreateClientRequestDTO;
 import com.example.taskday.domain.repositories.AddressRepository;
 import com.example.taskday.domain.repositories.ClientRepository;
 import com.example.taskday.domain.repositories.ContractorRepository;
 
 @Service
-public class ContractorService {
+public class ClientService {
     
-    private final ContractorRepository contractorRepository;
-    private final ClientRepository clientRepository;
-    private final AddressRepository addressRepository;
+    ClientRepository clientRepository;
+    ContractorRepository contractorRepository;
+    AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     
 
-
-
-    public ContractorService(ContractorRepository contractorRepository, ClientRepository clientRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
-        this.contractorRepository = contractorRepository;
+    public ClientService(ClientRepository clientRepository, ContractorRepository contractorRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
         this.clientRepository = clientRepository;
+        this.contractorRepository = contractorRepository;
         this.addressRepository = addressRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    
-    
-    public void createContractor(CreateContractorRequestDTO createContractorDTO) {
-        ensureUniqueIdentifiers(new Email(createContractorDTO.email()), new Phone(createContractorDTO.phone()), new Cpf(createContractorDTO.cpf()), createContractorDTO.rgDocument());
-        CreateAddressRequestDTO createAddressDTO = createContractorDTO.createAddressRequestDTO();
-        Contractor contractor = new ContractorBuilder(passwordEncoder).fromDTO(createContractorDTO).build();
-        Address address = new AddressBuilder().fromDTO(createAddressDTO).withOwner(contractor).build();
-        contractor.setAddress(address);
-        contractorRepository.save(contractor);
+        
+
+    public void createClient(CreateClientRequestDTO createClientDTO, CreateAddressRequestDTO createAddressDTO){
+        ensureUniqueIdentifiers(new Email(createClientDTO.email()), new Phone(createClientDTO.phone()), new Cpf(createClientDTO.cpf()), createClientDTO.rgDocument());
+        Client client = new ClientBuilder(passwordEncoder).fromDTO(createClientDTO).build();
+        Address address = new AddressBuilder().fromDTO(createAddressDTO).withOwner(client).build();
+        client.setAddress(address);
+        clientRepository.save(client);
         addressRepository.save(address);
     }
 
@@ -70,13 +62,6 @@ public class ContractorService {
     if(rgInUse) {
         throw new DuplicateFieldException("RG in use");
     }
-    }
-
-    public Contractor findContractorByEmail(Email email) {
-        if(email == null) {
-            throw new IllegalArgumentException("Identifier cannot be null"); 
-        }
-        return contractorRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Contractor not found with identifier: " + email));
     }
 }
 

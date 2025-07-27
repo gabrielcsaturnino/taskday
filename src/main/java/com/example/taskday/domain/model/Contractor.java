@@ -43,8 +43,8 @@ public class Contractor extends User {
     public Contractor() {
         super();
     }
-    public Contractor(String first_name, String last_name, String rg_doc, Password password, boolean status_account, Phone phone, Email email, Cpf cpf, DateOfBirthday dateOfBirthday) {
-        super(first_name, last_name, phone, email, cpf, password, status_account, rg_doc, dateOfBirthday);
+    public Contractor(String first_name, String last_name, String rgDoc, Password password, Phone phone, Email email, Cpf cpf, DateOfBirthday dateOfBirthday) {
+        super(first_name, last_name, phone, email, cpf, password, rgDoc, dateOfBirthday);
     }
 
     public void setAddress(Address address){

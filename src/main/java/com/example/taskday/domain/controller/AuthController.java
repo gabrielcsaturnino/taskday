@@ -2,8 +2,11 @@ package com.example.taskday.domain.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.taskday.domain.model.LoginRequestDTO;
+import com.example.taskday.domain.model.dtos.CreateAddressRequestDTO;
+import com.example.taskday.domain.model.dtos.CreateContractorRequestDTO;
+import com.example.taskday.domain.model.dtos.LoginRequestDTO;
 import com.example.taskday.domain.service.AuthenticationService;
+import com.example.taskday.domain.service.ContractorService;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,27 +22,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
+    private final ContractorService contractorService;
 
-    public AuthController(AuthenticationService authenticationService, AuthenticationManager authenticationManager) {
+    public AuthController(AuthenticationService authenticationService, AuthenticationManager authenticationManager, ContractorService contractorService) {
         this.authenticationService = authenticationService;
         this.authenticationManager = authenticationManager;
+        this.contractorService = contractorService;
     }
 
 
     @PostMapping("/authenticate")
-    public String postMethodName(@RequestBody LoginRequestDTO loginRequest) {        
+    public String authenticate(@RequestBody LoginRequestDTO loginRequest) {        
         Authentication authenticationRequest = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
 
-        System.out.println("Autenticando usuário: " + authenticationRequest.getName());
-        System.out.println(authenticationRequest.getAuthorities().stream().map(Object::toString).toList());
         return authenticationService.authenticate(authenticationRequest);
     }
-    
 
-    @GetMapping("/methodName")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    @PostMapping("/createContractorAccount")
+    public String createAccount(@RequestBody CreateContractorRequestDTO createContractorDTO) {
+        contractorService.createContractor(createContractorDTO);
+        return "";
     }
+    
+    
     
 }

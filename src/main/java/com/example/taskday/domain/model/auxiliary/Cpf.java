@@ -2,6 +2,8 @@ package com.example.taskday.domain.model.auxiliary;
 
 import java.util.regex.Pattern;
 
+import com.example.taskday.domain.exception.InvalidFormatException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -21,11 +23,11 @@ public class Cpf {
     
     public void isValid(String value) {
         if(value == null || value.isEmpty()) {
-            throw new IllegalArgumentException("CPF cannot be null or empty");
+            throw new InvalidFormatException("CPF cannot be null or empty");
         }
     
         if(!CPF_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("Invalid CPF format: " + value);
+            throw new InvalidFormatException("Invalid CPF format: " + value);
         }
     }
 

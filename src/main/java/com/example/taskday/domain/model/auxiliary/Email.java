@@ -2,6 +2,9 @@ package com.example.taskday.domain.model.auxiliary;
 
 import java.util.regex.Pattern;
 
+import com.example.taskday.domain.exception.InvalidFormatException;
+import com.example.taskday.domain.exception.SaveNullObjectException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -18,20 +21,19 @@ public class Email {
     }
 
     public Email(String email) {
-        if(isValidEmail(email)) {
-            this.email = email;
-        } else {
-            throw new IllegalArgumentException("Invalid email format: " + email);
-        }
+        isValidEmail(email);
         this.email = email;
     }
 
-    public boolean isValidEmail(String email) {
+    public void isValidEmail(String email) {
 
-        if(email == null || email.isEmpty()) {
-            return false;
+        if(email == null || email.isEmpty()){
+            throw new SaveNullObjectException("Email cannot be null");
         }
-        return EMAIL_PATTERN.matcher(email).matches();
+
+        if (EMAIL_PATTERN.matcher(email).matches() == false) {
+            throw new InvalidFormatException("Invalid email format");
+        }
     }
 
     public String getEmail() {

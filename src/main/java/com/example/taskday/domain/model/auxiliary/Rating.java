@@ -1,5 +1,7 @@
 package com.example.taskday.domain.model.auxiliary;
 
+import com.example.taskday.domain.exception.InvalidFormatException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -13,7 +15,7 @@ public class Rating {
 
     public Rating(double value) {
         if (value < 0 || value > 5) {
-            throw new IllegalArgumentException("Rating must be between 0 and 5");
+            throw new InvalidFormatException("Rating must be between 0 and 5");
         }
         this.value = Math.round(value * 10.0) / 10.0;
     }

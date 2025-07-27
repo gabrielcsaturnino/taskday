@@ -4,14 +4,18 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.taskday.domain.enums.JobApplicationStatusEnum;
 import com.example.taskday.domain.enums.JobExecutionStatusEnum;
+import com.example.taskday.domain.exception.ApplyingJobException;
+import com.example.taskday.domain.exception.CreateJobExecutionException;
 import com.example.taskday.domain.exception.InvalidStatusException;
 import com.example.taskday.domain.exception.NotFoundException;
+import com.example.taskday.domain.exception.SaveNullObjectException;
 import com.example.taskday.domain.model.Contractor;
 import com.example.taskday.domain.model.Job;
 import com.example.taskday.domain.model.JobApplication;
@@ -41,7 +45,7 @@ public class JobExecutionService {
      * @throws NotFoundException if the jobApplication is not found
      * @throws IllegalArgumentException if jobApplication status violates business rules
     */
-    public JobExecution createJobExecution(Long jobApplicationId) {
+    public void createJobExecution(Long jobApplicationId) {
         JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationId)
                 .orElseThrow(() -> new NotFoundException("JobApllication not found with id: " + jobApplicationId));
         
@@ -49,13 +53,13 @@ public class JobExecutionService {
             throw new InvalidStatusException("Job application must be accepted to create a job execution.");
         }
 
+
         List<Contractor> contractors = new ArrayList<>();
         contractors.add(jobApplication.getContractor());
         Job job = jobApplication.getJob();
 
         JobExecution jobExecution = new JobExecution(contractors, job);
         jobExecutionRepository.save(jobExecution);
-        return jobExecution;
         
     } 
     
@@ -120,7 +124,6 @@ public class JobExecutionService {
         
         JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
                   .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
-        
                 
         List<Long> contractorsId = jobExecutionRepository.findAllContractorByExecutionId(jobExecutionId);
         List<Contractor> contractors = contractorRepository.findAllById(contractorsId);
@@ -141,5 +144,42 @@ public class JobExecutionService {
         jobExecutionRepository.save(jobExecution);
     }
 
+    public void addNewContractor(Long jobExecutionId, Long contractorId) {
+       
+       JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
+            .orElseThrow(()-> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
+       
+       Contractor contractor = contractorRepository.findById(contractorId)
+            .orElseThrow(()-> new NotFoundException("Contractor not found with id: " + contractorId));
+       
+       if(jobExecution.getContractor().stream().anyMatch(c -> c.getId().equals(contractorId))) {
+            throw new ApplyingJobException("There cannot be the same contractor for the same job execution.");
+       }
+       jobExecution.getContractor().add(contractor);
+       jobExecutionRepository.save(jobExecution);
+    }
+
+    public boolean existsByJobId(Long jobId) {
+        return jobExecutionRepository.existsByJobId(jobId);
+    }
+
+   
+
+    public JobExecution findJobExecutionByJobId(Long jobId) {
+        return jobExecutionRepository.findByJobId(jobId);
+    }
+
+    public List<Long> findAllContractorByExecutionId(Long jobExecutionId) {
+        return jobExecutionRepository.findAllContractorByExecutionId(jobExecutionId);
+    }
+
+    public List<JobExecution> findAllCompletedByContractorId(Long contractorId) {
+        return jobExecutionRepository.findAllCompletedByContractorId(contractorId);
+    }
+
     
+
+
+    
+
 }

@@ -40,7 +40,7 @@ public abstract class User {
     private boolean status_account;
 
     @Column(name = "rg_doc", nullable = false, unique = true)
-    private String rg_doc;
+    private String rgDoc;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "date_of_birth", nullable = false))
@@ -56,15 +56,15 @@ public abstract class User {
 
 
     public User() {}
-    public User(String first_name, String last_name, Phone phone, Email email, Cpf cpf, Password password, boolean status_account, String rg_doc, DateOfBirthday dateOfBirthday) {
+    public User(String first_name, String last_name, Phone phone, Email email, Cpf cpf, Password password, String rgDoc, DateOfBirthday dateOfBirthday) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.phone = phone;
         this.email = email;
         this.cpf = cpf;
         this.password = password;
-        this.status_account = status_account;
-        this.rg_doc = rg_doc;
+        this.status_account = true;
+        this.rgDoc = rgDoc;
         this.dateOfBirthday = dateOfBirthday;
     }
     public String getFirst_name() {
@@ -92,8 +92,8 @@ public abstract class User {
     public boolean isStatus_account() {
         return status_account;
     }
-    public String getRg_doc() {
-        return rg_doc;
+    public String getRgDoc() {
+        return rgDoc;
     }
     public DateOfBirthday getDateOfBirthday() {
         return dateOfBirthday;

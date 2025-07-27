@@ -1,9 +1,11 @@
 package com.example.taskday.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.example.taskday.domain.enums.JobApplicationStatusEnum;
+import com.example.taskday.domain.events.JobApplicationAcceptedEvent;
 import com.example.taskday.domain.exception.InvalidStatusException;
 import com.example.taskday.domain.exception.NotFoundException;
 import com.example.taskday.domain.model.Contractor;
@@ -24,6 +26,10 @@ public class JobApplicationService {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
 
 
@@ -57,10 +63,13 @@ public class JobApplicationService {
         if(jobApplication.getStatusApplication() == JobApplicationStatusEnum.REJECTED && status != JobApplicationStatusEnum.REJECTED) {
             throw new InvalidStatusException("Cannot change status from REJECTED to another status.");
         }
-
+        
 
         jobApplication.setStatusApplication(status);
         jobApplicationRepository.save(jobApplication);
+        if(status == JobApplicationStatusEnum.ACCEPTED) {
+            applicationEventPublisher.publishEvent(new JobApplicationAcceptedEvent(this, jobApplication));
+        }
     }
 
     /**

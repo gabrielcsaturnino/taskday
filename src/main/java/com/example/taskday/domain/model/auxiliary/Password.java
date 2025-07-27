@@ -1,8 +1,6 @@
 package com.example.taskday.domain.model.auxiliary;
-
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.taskday.domain.exception.PasswordException;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -10,59 +8,52 @@ import jakarta.persistence.Embeddable;
 public class Password {
 
     @Column(name = "hash_password", nullable = false)
-    private String password;
+    private String hashValue;
 
-    public Password() {
+    private Password(String hashValue) {
+        this.hashValue = hashValue;
+    }
+    
+    protected Password() {}
+
+ 
+    public static Password create(String rawPassword, PasswordEncoder encoder) {
+        validate(rawPassword);
+        String hashedPassword = encoder.encode(rawPassword);
+        return new Password(hashedPassword);
+    }
+    
+    public boolean matches(String rawPassword, PasswordEncoder encoder) {
+        return encoder.matches(rawPassword, this.hashValue);
     }
 
-    public Password(String password){
-        validate(password);
-        this.password = password;
+    public String getHashValue() {
+        return hashValue;
     }
 
-
-    public boolean validate(String password){
+    private static void validate(String rawPassword) {
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            throw new PasswordException("Password cannot be empty.");
+        }
+        
         StringBuilder err = new StringBuilder();
-
-        if(!containsUpperCase(password)){
+        if (rawPassword.chars().noneMatch(Character::isUpperCase)) {
             err.append("Password must contain at least one uppercase letter.\n");
         }
-
-        if (!containsEspecialCharacter(password)) {
+        if (rawPassword.chars().noneMatch(ch -> "!@#$%^&*()_+[]{}|;':\",.<>?/".indexOf(ch) >= 0)) {
             err.append("Password must contain at least one special character.\n");
         }
-
-        if (!containsNumber(password)) {
+        if (rawPassword.chars().noneMatch(Character::isDigit)) {
             err.append("Password must contain at least one number.\n");
         }
-
-        if(err.length() > 0){
+        if (err.length() > 0) {
             throw new PasswordException(err.toString());
         }
-
-        return true;
-
-    }
-
-    public boolean containsUpperCase(String password) {
-        return password.chars().anyMatch(Character::isUpperCase);
-    }
-
-    public boolean containsEspecialCharacter(String password) {
-        return password.chars().anyMatch(ch -> "!@#$%^&*()_+[]{}|;':\",.<>?/".indexOf(ch) >= 0);
-    }
-
-    public boolean containsNumber(String password) {
-        return password.chars().anyMatch(Character::isDigit);
     }
 
     public String getPassword() {
-        return password;
+        return hashValue;
     }
 
-    public void setPassword(String password) {
-        validate(password);
-        this.password = password;
-    }
     
 }

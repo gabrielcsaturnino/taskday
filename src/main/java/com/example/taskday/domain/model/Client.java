@@ -40,8 +40,8 @@ public class Client extends User{
         super();
     }
 
-    public Client(String first_name, String last_name, Phone phone, Email email, Cpf cpf, Password password, boolean status_account, String rg_doc, DateOfBirthday dateOfBirthday) {
-        super(first_name, last_name, phone, email, cpf, password, status_account, rg_doc, dateOfBirthday);
+    public Client(String first_name, String last_name, Phone phone, Email email, Cpf cpf, Password password, String rgDoc, DateOfBirthday dateOfBirthday) {
+        super(first_name, last_name, phone, email, cpf, password,  rgDoc, dateOfBirthday);
     }
 
 

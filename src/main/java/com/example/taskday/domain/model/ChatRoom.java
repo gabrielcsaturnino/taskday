@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.example.taskday.domain.enums.ChatRoomStatusEnum;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@Entity
 @Table (name = "chat_rooms")
 public class ChatRoom {
     @Id
@@ -44,9 +46,14 @@ public class ChatRoom {
     public ChatRoom(Client client, Contractor contractor) {
         this.client = client;
         this.contractor = contractor;
+        chatRoomStatusEnum = ChatRoomStatusEnum.INACTIVE;
     }
 
     public ChatRoom() {
+    }
+
+    public void setChatRoomStatusEnum(ChatRoomStatusEnum chatRoomStatusEnum) {
+        this.chatRoomStatusEnum = chatRoomStatusEnum;
     }
 
     

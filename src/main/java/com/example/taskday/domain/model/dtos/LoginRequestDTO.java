@@ -1,4 +1,4 @@
-package com.example.taskday.domain.model;
+package com.example.taskday.domain.model.dtos;
 
 public record LoginRequestDTO(
     String email,
