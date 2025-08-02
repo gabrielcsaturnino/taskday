@@ -103,4 +103,14 @@ public class CustomUserDetails implements UserDetails {
         }
         return false; 
     }
+
+    public Long getUserId() {
+        if(client != null) {
+            return client.getId();
+        }
+        if(contractor != null) {
+            return contractor.getId();
+        }
+        return null; 
+    }
 }

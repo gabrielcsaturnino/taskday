@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.taskday.domain.enums.MessageOwnerEnum;
 import com.example.taskday.domain.enums.TypeMessageEnum;
 
 @Entity
@@ -21,16 +22,12 @@ public class Message {
     @JoinColumn(name = "id_chat_room", nullable = false)
     private ChatRoom chatRoom;
 
-    @ManyToOne
-    @JoinColumn(name = "id_client", nullable = false)
-    private Client client;
-
-    @ManyToOne
-    @JoinColumn(name = "id_contractor", nullable = false)
-    private Contractor contractor;
-
     @Column(name = "content_message", nullable = false, columnDefinition = "TEXT")
     private String contentMessage;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "message_owner_send", nullable = false)
+    private MessageOwnerEnum messageOwnerSend;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_message", nullable = false)
@@ -44,14 +41,22 @@ public class Message {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updated_at;
 
-    // Getters and setters
+    public Message(ChatRoom chatRoom, String contentMessage, TypeMessageEnum typeMessage, MessageOwnerEnum messageOwnerEnum) {
+        this.chatRoom = chatRoom;
+        this.contentMessage = contentMessage;
+        this.typeMessage = typeMessage;
+        this.messageOwnerSend = messageOwnerEnum;
+    }
+
+    
+
+    public Message() {
+    }
+
+
     public Long getId() { return id; }
     public ChatRoom getChatRoom() { return chatRoom; }
     public void setChatRoom(ChatRoom chatRoom) { this.chatRoom = chatRoom; }
-    public Client getClient() { return client; }
-    public void setClient(Client client) { this.client = client; }
-    public Contractor getContractor() { return contractor; }
-    public void setContractor(Contractor contractor) { this.contractor = contractor; }
     public String getContentMessage() { return contentMessage; }
     public void setContentMessage(String contentMessage) { this.contentMessage = contentMessage; }
     public TypeMessageEnum getTypeMessage() { return typeMessage; }

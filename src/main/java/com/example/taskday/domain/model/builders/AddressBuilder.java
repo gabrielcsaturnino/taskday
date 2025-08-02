@@ -1,5 +1,6 @@
 package com.example.taskday.domain.model.builders;
 
+import com.example.taskday.domain.exception.NotFoundException;
 import com.example.taskday.domain.model.Client;
 import com.example.taskday.domain.model.Contractor;
 import com.example.taskday.domain.model.Job;
@@ -48,7 +49,7 @@ public class AddressBuilder {
         } else if (owner instanceof Job job) {
             return new Address(street, number, neighborhood, city, state, zipCode, job);
         } else {
-            throw new IllegalStateException("Owner inválido para Address");
+            throw new NotFoundException("Invalid owner type");
         }
     }
 }

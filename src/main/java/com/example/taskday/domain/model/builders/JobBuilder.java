@@ -10,6 +10,7 @@ public class JobBuilder {
     String description;
     int pricePerHour;
     Client client;
+    
 
     public JobBuilder fromDTO(CreateJobRequestDTO dto, Client client) {
         this.title = dto.title();

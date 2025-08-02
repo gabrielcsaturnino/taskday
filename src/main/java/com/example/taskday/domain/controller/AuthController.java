@@ -3,9 +3,11 @@ package com.example.taskday.domain.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskday.domain.model.dtos.CreateAddressRequestDTO;
+import com.example.taskday.domain.model.dtos.CreateClientRequestDTO;
 import com.example.taskday.domain.model.dtos.CreateContractorRequestDTO;
 import com.example.taskday.domain.model.dtos.LoginRequestDTO;
 import com.example.taskday.domain.service.AuthenticationService;
+import com.example.taskday.domain.service.ClientService;
 import com.example.taskday.domain.service.ContractorService;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +25,10 @@ public class AuthController {
     private final AuthenticationService authenticationService;
     private final AuthenticationManager authenticationManager;
     private final ContractorService contractorService;
+    private final ClientService clientService; 
 
-    public AuthController(AuthenticationService authenticationService, AuthenticationManager authenticationManager, ContractorService contractorService) {
+    public AuthController(AuthenticationService authenticationService, AuthenticationManager authenticationManager, ContractorService contractorService, ClientService clientService) {
+        this.clientService = clientService;
         this.authenticationService = authenticationService;
         this.authenticationManager = authenticationManager;
         this.contractorService = contractorService;
@@ -44,7 +48,12 @@ public class AuthController {
         contractorService.createContractor(createContractorDTO);
         return "";
     }
-    
+
+    @PostMapping("/createClientAccount")
+    public String postMethodName(@RequestBody CreateClientRequestDTO createClientRequestDTO) {
+        clientService.createClient(createClientRequestDTO);        
+        return "";
+    }
     
     
 }

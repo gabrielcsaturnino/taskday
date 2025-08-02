@@ -2,7 +2,7 @@ package com.example.taskday.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import com.example.taskday.domain.exception.NullValueException;
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
 import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
@@ -48,7 +48,7 @@ public class Client extends User{
 
     public void setAddress(Address address){
          if (address == null) {
-            throw new IllegalArgumentException("Address cannot be null");
+            throw new NullValueException("Address cannot be null");
         }
         addresses.add(address);
         address.setClient(this);
@@ -57,7 +57,7 @@ public class Client extends User{
 
     public void setJob(Job job) {
         if (job == null) {
-            throw new IllegalArgumentException("Job cannot be null");   
+            throw new NullValueException("Job cannot be null");   
         }
         this.jobs.add(job);
         

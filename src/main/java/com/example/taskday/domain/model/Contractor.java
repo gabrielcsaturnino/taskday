@@ -3,7 +3,7 @@ package com.example.taskday.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import com.example.taskday.domain.exception.NullValueException;
 import com.example.taskday.domain.model.auxiliary.Address;
 import com.example.taskday.domain.model.auxiliary.Cpf;
 import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
@@ -49,7 +49,7 @@ public class Contractor extends User {
 
     public void setAddress(Address address){
         if (address == null) {
-            throw new IllegalArgumentException("Address cannot be null");
+            throw new NullValueException("Address cannot be null");
         }
         addresses.add(address);
         address.setContractor(this);
@@ -58,7 +58,7 @@ public class Contractor extends User {
 
     public void setAvarageRating(Rating newRating) {
         if (newRating == null) {
-            throw new IllegalArgumentException("Rating cannot be null");   
+            throw new NullValueException("Rating cannot be null");   
         }
         this.avarageRating = newRating.setValue(this.avarageRating, 0.2);
     }

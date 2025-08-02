@@ -34,8 +34,9 @@ public class ClientService {
     }
         
 
-    public void createClient(CreateClientRequestDTO createClientDTO, CreateAddressRequestDTO createAddressDTO){
+    public void createClient(CreateClientRequestDTO createClientDTO){
         ensureUniqueIdentifiers(new Email(createClientDTO.email()), new Phone(createClientDTO.phone()), new Cpf(createClientDTO.cpf()), createClientDTO.rgDocument());
+        CreateAddressRequestDTO createAddressDTO = createClientDTO.createAddressRequestDTO();
         Client client = new ClientBuilder(passwordEncoder).fromDTO(createClientDTO).build();
         Address address = new AddressBuilder().fromDTO(createAddressDTO).withOwner(client).build();
         client.setAddress(address);

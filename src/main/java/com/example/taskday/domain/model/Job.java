@@ -1,5 +1,7 @@
 package com.example.taskday.domain.model;
 
+import com.example.taskday.domain.exception.InvalidFormatException;
+import com.example.taskday.domain.exception.NullValueException;
 import com.example.taskday.domain.model.auxiliary.Address;
 
 import jakarta.persistence.CascadeType;
@@ -63,7 +65,7 @@ public class Job {
 
     public void setAddress(Address address) {
         if (address == null) {
-            throw new IllegalArgumentException("Address cannot be null");
+            throw new NullValueException("Address cannot be null");
         }
         this.address = address;
         address.setJob(this);
@@ -80,21 +82,21 @@ public class Job {
 
     public void setPricePerHour(int pricePerHour) {
         if (pricePerHour < 0) {
-            throw new IllegalArgumentException("Price per hour cannot be negative");
+            throw new InvalidFormatException("Price per hour cannot be negative");
         }
         this.pricePerHour = pricePerHour;
     }
 
     public void setDescription(String description) {
         if (description == null || description.isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be null or empty");
+            throw new NullValueException("Description cannot be null or empty");
         }
         this.description = description;
     }
 
     public void setTitle(String title) {
         if (title == null || title.isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be null or empty");
+            throw new NullValueException("Title cannot be null or empty");
         }
         this.title = title;
     }

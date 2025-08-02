@@ -1,6 +1,7 @@
 package com.example.taskday.domain.model;
 
 import com.example.taskday.domain.enums.JobApplicationStatusEnum;
+import com.example.taskday.domain.exception.NullValueException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,7 +67,7 @@ public class JobApplication {
 
     public void setStatusApplication(JobApplicationStatusEnum statusApplication) {
         if (statusApplication == null) {
-            throw new IllegalArgumentException("Status application cannot be null");
+            throw new NullValueException("Status application cannot be null");
         }
         this.statusApplication = statusApplication;
     }

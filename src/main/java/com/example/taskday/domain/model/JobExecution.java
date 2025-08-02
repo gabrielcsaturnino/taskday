@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskday.domain.enums.JobApplicationStatusEnum;
 import com.example.taskday.domain.enums.JobExecutionStatusEnum;
+import com.example.taskday.domain.exception.NullValueException;
 
 import io.micrometer.common.lang.internal.Contract;
 import jakarta.persistence.*;
@@ -89,7 +90,7 @@ public class JobExecution {
 
     public void setStatus(JobExecutionStatusEnum status) {
         if (status == null) {
-            throw new IllegalArgumentException("New status cannot be null");
+            throw new NullValueException("New status cannot be null");
         }
         this.status = status;
     }

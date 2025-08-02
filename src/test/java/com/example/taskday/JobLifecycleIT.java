@@ -2,7 +2,6 @@ package com.example.taskday;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +20,7 @@ import com.example.taskday.domain.model.Contractor;
 import com.example.taskday.domain.model.Job;
 import com.example.taskday.domain.model.JobApplication;
 import com.example.taskday.domain.model.JobExecution;
-import com.example.taskday.domain.model.auxiliary.Address;
-import com.example.taskday.domain.model.auxiliary.Cpf;
-import com.example.taskday.domain.model.auxiliary.DateOfBirthday;
 import com.example.taskday.domain.model.auxiliary.Email;
-import com.example.taskday.domain.model.auxiliary.Password;
-import com.example.taskday.domain.model.auxiliary.Phone;
-import com.example.taskday.domain.model.builders.AddressBuilder;
-import com.example.taskday.domain.model.builders.ContractorBuilder;
 import com.example.taskday.domain.model.dtos.CreateAddressRequestDTO;
 import com.example.taskday.domain.model.dtos.CreateClientRequestDTO;
 import com.example.taskday.domain.model.dtos.CreateContractorRequestDTO;
@@ -62,9 +54,6 @@ public class JobLifecycleIT {
     private JobExecutionRepository jobExecutionRepository;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
 
     @Autowired
     private JobExecutionService jobExecutionService;
@@ -103,17 +92,16 @@ public class JobLifecycleIT {
         contractorService.createContractor(createContractorDTO2);
 
 
-
+        CreateAddressRequestDTO createAddressDTO3 = new CreateAddressRequestDTO("Second St", "456", "Suite 789", "Uptown", "23456-789","Townsville");
         CreateClientRequestDTO createClientDTO = new CreateClientRequestDTO("Jane", "Smith", "987654329", "clientPassword123#", "62998765432", 
                 "clientEmail@gmail.com",
                 "02920643223",
-                "1990-01-01");
-        CreateAddressRequestDTO createAddressDTO3 = new CreateAddressRequestDTO("Second St", "456", "Suite 789", "Uptown", "23456-789","Townsville");
-        clientService.createClient(createClientDTO, createAddressDTO3);
+                "1990-01-01", createAddressDTO3);
+        clientService.createClient(createClientDTO);
 
         Client client = clientRepository.findByEmail(new Email("clientEmail@gmail.com")).get();
         
-        CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140);
+        CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140, createAddressDTO3);
         jobService.CreateJob(createJobDTO, client);
     }
 

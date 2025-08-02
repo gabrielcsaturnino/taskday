@@ -9,5 +9,6 @@ public record CreateJobRequestDTO(
     @NotBlank(message = "Description cannot be blank")
     String description, 
     @NotEmpty(message = "Price per hour cannot be empty")
-    int pricePerHour
+    int pricePerHour,
+    CreateAddressRequestDTO createAddressRequestDTO
 ) {}

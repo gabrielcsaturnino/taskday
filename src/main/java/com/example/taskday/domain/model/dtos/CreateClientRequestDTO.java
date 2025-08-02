@@ -23,5 +23,6 @@ public record CreateClientRequestDTO(
     @NotBlank(message = "CPF cannot be blank")
     String cpf,
     @NotBlank(message = "Date of birthday cannot be blank")
-    String dateOfBirthday
+    String dateOfBirthday,
+    CreateAddressRequestDTO createAddressRequestDTO
 ) {}

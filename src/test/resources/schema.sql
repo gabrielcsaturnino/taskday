@@ -77,7 +77,6 @@ CREATE TABLE public.client_job_applications (
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
--- Tabela client_job_execution MODIFICADA (sem id_contractor)
 CREATE TABLE public.client_job_execution (
     id_execution integer NOT NULL,
     id_job integer NOT NULL,
@@ -119,13 +118,14 @@ CREATE TABLE public.contractor_skill (
 
 CREATE TABLE public.messages (
     id_message integer NOT NULL,
-    id_chat_room integer NOT NULL,
-    id_client integer NOT NULL,
-    id_contractor integer NOT NULL,
-    content_message text NOT NULL,
-    type_message VARCHAR(255) DEFAULT 'text' NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    id_chat_room INTEGER NOT NULL,
+    content_message TEXT NOT NULL,
+    message_owner_send VARCHAR(255) NOT NULL, -- Esta é a única fonte da verdade sobre o remetente
+    type_message VARCHAR(255) DEFAULT 'TEXT' NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+    CONSTRAINT chk_message_owner_send CHECK (message_owner_send IN ('CLIENT', 'CONTRACTOR'))
 );
 
 
@@ -205,9 +205,6 @@ ALTER TABLE public.client_jobs ADD CONSTRAINT client_jobs_id_client_fkey FOREIGN
 ALTER TABLE public.contractor_experience ADD CONSTRAINT contractor_experience_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.contractor_skill ADD CONSTRAINT contractor_skill_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.messages ADD CONSTRAINT messages_id_chat_room_fkey FOREIGN KEY (id_chat_room) REFERENCES public.chat_rooms(id_chat_room) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE public.messages ADD CONSTRAINT messages_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE public.messages ADD CONSTRAINT messages_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
-
 -- Adicionando as chaves estrangeiras para a nova tabela de junção
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_exec FOREIGN KEY (job_execution_id) REFERENCES public.client_job_execution(id_execution) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_contractor FOREIGN KEY (contractor_id) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;

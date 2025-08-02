@@ -56,7 +56,21 @@ public class ChatRoom {
         this.chatRoomStatusEnum = chatRoomStatusEnum;
     }
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public Contractor getContractor() {
+        return contractor;
+    }
+
+    public ChatRoomStatusEnum getChatRoomStatusEnum() {
+        return chatRoomStatusEnum;
+    }
 
     
 }
