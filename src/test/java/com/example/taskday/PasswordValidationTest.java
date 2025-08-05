@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.taskday.domain.exception.PasswordException;
-import com.example.taskday.domain.model.auxiliary.Password;
+import com.example.taskday.auxiliary.Password;
+import com.example.taskday.exception.PasswordException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

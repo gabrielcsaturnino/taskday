@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.example.taskday.domain.exception.GlobalExceptionHandler;
-import com.example.taskday.domain.exception.PasswordException;
+import com.example.taskday.exception.GlobalExceptionHandler;
+import com.example.taskday.exception.PasswordException;
 
 class GlobalExceptionHandlerTest {
     @Test
