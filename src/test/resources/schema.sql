@@ -63,6 +63,7 @@ CREATE TABLE public.chat_rooms (
     id_chat_room integer NOT NULL,
     id_client integer NOT NULL,
     id_contractor integer NOT NULL,
+    id_job integer NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     status_chat VARCHAR(255) DEFAULT 'inactive' NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -91,7 +92,6 @@ CREATE TABLE public.client_job_execution (
     total_time BIGINT DEFAULT NULL
 );
 
--- NOVA Tabela de junção para JobExecution e Contractor
 CREATE TABLE public.job_execution_contractor (
     job_execution_id INTEGER NOT NULL,
     contractor_id INTEGER NOT NULL
@@ -185,7 +185,6 @@ ALTER TABLE public.messages ADD CONSTRAINT messages_pkey PRIMARY KEY (id_message
 ALTER TABLE public.client_job_applications ADD CONSTRAINT uq_job_contractor_application UNIQUE (id_job, id_contractor);
 ALTER TABLE public.client_job_execution ADD CONSTRAINT uq_job_execution UNIQUE (id_job);
 ALTER TABLE public.address ADD CONSTRAINT uq_owner_address_details UNIQUE (owner_type, id_client, id_contractor, id_job, street, number, zip_code);
--- Adicionando a chave primária para a nova tabela de junção
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT pk_job_execution_contractor PRIMARY KEY (job_execution_id, contractor_id);
 
 
@@ -196,15 +195,14 @@ ALTER TABLE public.address ADD CONSTRAINT address_id_contractor_fkey FOREIGN KEY
 ALTER TABLE public.address ADD CONSTRAINT address_id_job_fkey FOREIGN KEY (id_job) REFERENCES public.client_jobs(id_job) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.chat_rooms ADD CONSTRAINT chat_rooms_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.chat_rooms ADD CONSTRAINT chat_rooms_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE public.chat_rooms ADD CONSTRAINT chat_rooms_id_job_fkey FOREIGN KEY (id_job) REFERENCES public.client_jobs(id_job) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_job_applications ADD CONSTRAINT client_job_applications_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_job_applications ADD CONSTRAINT client_job_applications_id_job_fkey FOREIGN KEY (id_job) REFERENCES public.client_jobs(id_job) ON UPDATE CASCADE ON DELETE CASCADE;
--- Chave estrangeira para id_contractor REMOVIDA
 ALTER TABLE public.client_job_execution ADD CONSTRAINT client_job_execution_id_job_fkey FOREIGN KEY (id_job) REFERENCES public.client_jobs(id_job) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_job_execution ADD CONSTRAINT client_job_execution_id_contractor_leader_fkey FOREIGN KEY (id_contractor_leader) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_jobs ADD CONSTRAINT client_jobs_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.contractor_experience ADD CONSTRAINT contractor_experience_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.contractor_skill ADD CONSTRAINT contractor_skill_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.messages ADD CONSTRAINT messages_id_chat_room_fkey FOREIGN KEY (id_chat_room) REFERENCES public.chat_rooms(id_chat_room) ON UPDATE CASCADE ON DELETE CASCADE;
--- Adicionando as chaves estrangeiras para a nova tabela de junção
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_exec FOREIGN KEY (job_execution_id) REFERENCES public.client_job_execution(id_execution) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_contractor FOREIGN KEY (contractor_id) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;

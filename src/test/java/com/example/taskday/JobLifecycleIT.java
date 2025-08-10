@@ -1,5 +1,6 @@
 package com.example.taskday;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.taskday.address.dto.CreateAddressRequestDTO;
 import com.example.taskday.address.repository.AddressRepository;
 import com.example.taskday.auxiliary.Email;
+import com.example.taskday.chatroom.ChatRoom;
+import com.example.taskday.chatroom.service.ChatRoomService;
 import com.example.taskday.exception.InvalidStatusException;
 import com.example.taskday.job.Job;
 import com.example.taskday.job.JobApplication;
@@ -70,6 +73,9 @@ public class JobLifecycleIT {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private ChatRoomService chatRoomService;
+
 
 
 
@@ -102,7 +108,7 @@ public class JobLifecycleIT {
         Client client = clientRepository.findByEmail(new Email("clientEmail@gmail.com")).get();
         
         CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140, createAddressDTO3);
-        jobService.CreateJob(createJobDTO, client);
+        jobService.createJob(createJobDTO, client);
     }
 
     @Test
@@ -130,7 +136,7 @@ public class JobLifecycleIT {
         jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5);
         contractorRepository.save(contractor);
         assert jobExecutionRepository.findAllContractorByExecutionId(jobExecution.getId()).get(0) == jobExecution.getContractorLeader().getId();
-        assert contractorRepository.findById(contractor.getId()).get().getAvarageRating() == 4.9;
+        assert contractorRepository.findById(contractor.getId()).get().getAvarageRating().getValue() == 4.9;
         System.out.println("id do contractor:" + contractor.getId());
         List<JobExecution> jobExecutions = jobExecutionRepository.findAllCompletedByContractorId(contractor.getId());
         assert jobExecutions.size() == 1;
@@ -183,6 +189,33 @@ public class JobLifecycleIT {
         assert jobExecutionService.findJobExecutionByJobId(jobApplication1.getJob().getId()).getContractor().get(1).getEmail().equals("janeSmith@gmail.com");
 
        
+    }
+
+    @Test
+    @Transactional
+    public void changeLeader() {
+        Contractor contractor = contractorService.findContractorByEmail(new Email("jhonDoe@gmail.com"));
+        Contractor contractor2 = contractorService.findContractorByEmail(new Email("janeSmith@gmail.com"));
+        Job job = jobService.findById(1L);
+        JobApplication jobApplication = jobApplicationService.createJobApplication(job.getId(), contractor.getId());
+        jobApplicationService.updateStatus(jobApplication.getId(), JobApplicationStatusEnum.ACCEPTED);
+        ChatRoom chatRoom = chatRoomService.findByJobId(job.getId());
+        assert chatRoom.getContractor().getId() == contractor.getId();
+        JobApplication jobApplication2 = jobApplicationService.createJobApplication(job.getId(), contractor2.getId());
+        jobApplicationService.updateStatus(jobApplication2.getId(), JobApplicationStatusEnum.ACCEPTED);
+        assert chatRoom.getContractor().getId() == contractor.getId();
+        assertNotEquals(chatRoom.getContractor().getId(), contractor2.getId());
+        JobExecution jobExecution = jobExecutionService.findJobExecutionByJobId(jobApplication.getJob().getId());
+        assert jobExecution.getContractorLeader().getId() == contractor.getId();
+        jobExecutionService.changeLeader(jobExecution.getId(), contractor2.getId());
+        assert chatRoom.getContractor().getId() == contractor2.getId();
+        assert jobExecution.getContractorLeader().getId() == contractor2.getId();
+        assert jobExecutionService.findAllContractorByExecutionId(jobExecution.getId()).size() == 2;
+        jobExecutionService.excludeContractor(jobExecution.getId(), contractor2.getId());
+        assert jobExecutionService.findAllContractorByExecutionId(jobExecution.getId()).size() == 1;
+        assert jobExecution.getContractorLeader().getId() == contractor.getId();
+        assert chatRoom.getContractor().getId() == contractor.getId();
+        
     }
 
     

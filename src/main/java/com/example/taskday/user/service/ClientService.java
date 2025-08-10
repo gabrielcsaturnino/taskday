@@ -22,9 +22,9 @@ import com.example.taskday.user.repository.ContractorRepository;
 @Service
 public class ClientService {
     
-    ClientRepository clientRepository;
-    ContractorRepository contractorRepository;
-    AddressRepository addressRepository;
+    private final ClientRepository clientRepository;
+    private final ContractorRepository contractorRepository;
+    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     
 
@@ -70,6 +70,10 @@ public class ClientService {
     public Client findByEmail(Email email) {
         return clientRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Client not found with email: " + email));
+    }
+    
+    public boolean existsById(Long id) {
+        return clientRepository.existsById(id);
     }
 
 }

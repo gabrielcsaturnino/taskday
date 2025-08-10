@@ -5,6 +5,7 @@ import com.example.taskday.address.dto.CreateAddressRequestDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
 
 public record CreateContractorRequestDTO(
     @NotBlank(message = "First name cannot be blank")
@@ -25,6 +26,9 @@ public record CreateContractorRequestDTO(
     String cpf,
     @NotBlank(message = "Date of birthday cannot be blank")
     String dateOfBirthday,
+    @Valid
     CreateAddressRequestDTO createAddressRequestDTO
+    
+   
 ) {}
 

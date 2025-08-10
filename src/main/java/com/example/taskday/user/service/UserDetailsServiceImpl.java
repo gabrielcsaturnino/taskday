@@ -16,7 +16,7 @@ import com.example.taskday.user.repository.ClientRepository;
 import com.example.taskday.user.repository.ContractorRepository;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     private final ClientRepository clientRepository;

@@ -18,19 +18,25 @@ import com.example.taskday.user.repository.ContractorRepository;
 @Service
 public class JobApplicationService {
     
-    @Autowired
+    
     private JobApplicationRepository jobApplicationRepository;
 
-    @Autowired
+    
     private ContractorRepository contractorRepository;
 
-    @Autowired
+    
     private JobRepository jobRepository;
 
-    @Autowired
+    
     private ApplicationEventPublisher applicationEventPublisher;
 
 
+    public JobApplicationService(JobApplicationRepository jobApplicationRepository, ContractorRepository contractorRepository, JobRepository jobRepository, ApplicationEventPublisher applicationEventPublisher) {
+        this.jobApplicationRepository = jobApplicationRepository;
+        this.contractorRepository = contractorRepository;
+        this.jobRepository = jobRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
 
 

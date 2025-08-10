@@ -1,5 +1,7 @@
 package com.example.taskday.message.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.taskday.chatroom.ChatRoom;
@@ -22,12 +24,16 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public Message saveMessage(MessageDTO messageDTO) {
+    public Message createMessage(MessageDTO messageDTO) {
 
         ChatRoom chatRoom = chatRoomService.findById(messageDTO.getChatRoomId());
         Message message = new MessageBuilder()
                 .fromDTO(messageDTO, chatRoom)
                 .build();
         return messageRepository.save(message);
+    }
+    
+    public List<Message> findAllByChatRoomId(Long chatRoomId) {
+        return messageRepository.findAllByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
     }
 }

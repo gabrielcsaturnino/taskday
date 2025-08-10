@@ -14,14 +14,17 @@ import com.example.taskday.user.service.ClientService;
 
 @Component
 public class JobApplicationAcceptedListener {
-    @Autowired
     JobExecutionService jobExecutionService;
 
-    @Autowired
     ChatRoomService chatRoomService;
 
-    @Autowired
     ClientService clientService;
+
+    public JobApplicationAcceptedListener(JobExecutionService jobExecutionService, ChatRoomService chatRoomService, ClientService clientService) {
+        this.jobExecutionService = jobExecutionService;
+        this.chatRoomService = chatRoomService;
+        this.clientService = clientService;
+    }
 
 
     @EventListener
@@ -31,9 +34,11 @@ public class JobApplicationAcceptedListener {
             return;
         }
         
-        ChatRoom chatRoom = new ChatRoom(event.getJobApplication().getJob().getClient(), event.getJobApplication().getContractor());
-        chatRoomService.createChatRoom(chatRoom);
-        chatRoomService.updateStatus(chatRoom.getId(), ChatRoomStatusEnum.ACTIVE);
+        if (!chatRoomService.existsByJobId(event.getJobApplication().getJob().getId())) {
+            ChatRoom chatRoom = chatRoomService.createChatRoom(event.getJobApplication().getJob().getClient(), event.getJobApplication().getContractor(), event.getJobApplication().getJob());
+            chatRoomService.updateStatus(chatRoom.getId(), ChatRoomStatusEnum.ACTIVE);
+        }
+
         jobExecutionService.createJobExecution(event.getJobApplication().getId());
 
     }

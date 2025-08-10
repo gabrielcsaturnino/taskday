@@ -1,6 +1,7 @@
 package com.example.taskday.user.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,11 @@ import com.example.taskday.auxiliary.DateOfBirthday;
 import com.example.taskday.auxiliary.Email;
 import com.example.taskday.auxiliary.Password;
 import com.example.taskday.auxiliary.Phone;
+import com.example.taskday.auxiliary.Rating;
 import com.example.taskday.exception.DuplicateFieldException;
+import com.example.taskday.exception.InvalidFormatException;
 import com.example.taskday.exception.NotFoundException;
+import com.example.taskday.exception.NullValueException;
 import com.example.taskday.user.Contractor;
 import com.example.taskday.user.builder.ContractorBuilder;
 import com.example.taskday.user.dto.CreateContractorRequestDTO;
@@ -78,6 +82,38 @@ public class ContractorService {
         }
         return contractorRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Contractor not found with identifier: " + email));
     }
-}
+    
+    public Contractor findById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Id cannot be null"); 
+        }
+        return contractorRepository.findById(id).orElseThrow(() -> new NotFoundException("Contractor not found with id: " + id));
+    }
+    
+    public boolean existsById(Long id) {
+        if(id == null) {
+            throw new IllegalArgumentException("Id cannot be null"); 
+        }
+        return contractorRepository.existsById(id);
+    }
 
+    public void setAvarageRating(Long id, Rating rating) {
+        if (id == null || rating == null) {
+            throw new NullValueException("Id or Rating cannot be null");
+        }
+
+        Contractor contractor = findById(id);
+        rating.setValue(contractor.getAvarageRating(), 0.2);
+        contractor.setAvarageRating(rating);
+        contractorRepository.save(contractor);
+
+    }
+
+    public List<Contractor> findAllById(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new NullValueException("Ids cannot be null or empty");
+        }
+        return contractorRepository.findAllById(ids);
+    }
+}
 

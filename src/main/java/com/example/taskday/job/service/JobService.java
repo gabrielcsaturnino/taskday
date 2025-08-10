@@ -30,7 +30,7 @@ public class JobService {
     }
 
 
-    public void CreateJob(CreateJobRequestDTO createJobDTO, Client client) {
+    public void createJob(CreateJobRequestDTO createJobDTO, Client client) {
         Job job = new JobBuilder().fromDTO(createJobDTO, client).build();
         Address address = new AddressBuilder().fromDTO(createJobDTO.createAddressRequestDTO()).withOwner(job).build();
         job.setAddress(address);

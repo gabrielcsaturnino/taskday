@@ -40,11 +40,8 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        // Intercepta apenas o comando de conexão para autenticar.
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            // O frontend deve enviar o token no cabeçalho 'Authorization' do STOMP.
             List<String> authorization = accessor.getNativeHeader("Authorization");
-            
             if (authorization == null || authorization.isEmpty()) {
                 System.err.println("Error: Authorization header is missing.");
                 return message;
@@ -55,29 +52,23 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
                 String token = bearerToken.substring(7);
                 
                 try {
-                    // Decodifica o token usando o JwtDecoder.
                     Jwt jwt = jwtDecoder.decode(token);
                     
-                    // Extrai o 'subject' do token, que é o username (email no seu caso).
                     String username = jwt.getSubject();
 
                     if (username != null) {
-                        // Carrega os detalhes do usuário usando seu UserDetailsServiceImpl.
                         CustomUserDetails userDetails = (CustomUserDetails) this.userDetailsServiceImpl.loadUserByUsername(username);
-                        System.err.println("User authenticated: " + userDetails.getUsername());
-                        // Cria o objeto de autenticação do Spring Security.
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
                         
-                        // Associa o usuário autenticado à sessão WebSocket.
-                        // A partir daqui, o 'Principal' estará disponível nos seus controllers.
+                        
                         accessor.setUser(authentication);
                     }
                 } catch (JwtException e) {
-                    // Se o token for inválido, a conexão não será autenticada.
                     System.err.println("Error: Invalid JWT token: ");
                 }
             }
+
         }
         return message;
     }

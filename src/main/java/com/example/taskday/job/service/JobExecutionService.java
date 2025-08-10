@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.example.taskday.auxiliary.Rating;
@@ -20,24 +22,35 @@ import com.example.taskday.job.JobApplication;
 import com.example.taskday.job.JobExecution;
 import com.example.taskday.job.enums.JobApplicationStatusEnum;
 import com.example.taskday.job.enums.JobExecutionStatusEnum;
+import com.example.taskday.job.event.JobExecutionChangeLeaderEvent;
 import com.example.taskday.job.repository.JobApplicationRepository;
 import com.example.taskday.job.repository.JobExecutionRepository;
 import com.example.taskday.user.Contractor;
 import com.example.taskday.user.repository.ContractorRepository;
+import com.example.taskday.user.service.ContractorService;
 
 @Service
 public class JobExecutionService {
 
-    @Autowired
     private JobExecutionRepository jobExecutionRepository;
 
-    @Autowired
     private JobApplicationRepository jobApplicationRepository;
 
-    @Autowired
     private ContractorRepository contractorRepository;
 
-    
+    private ContractorService  contractorService;
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    public JobExecutionService(JobExecutionRepository jobExecutionRepository, 
+            JobApplicationRepository jobApplicationRepository, ContractorRepository contractorRepository, ContractorService contractorService, ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.jobExecutionRepository = jobExecutionRepository;
+        this.jobApplicationRepository = jobApplicationRepository;
+        this.contractorRepository = contractorRepository;
+        this.contractorService = contractorService;
+    }
+
 
     /**
      * create the JobExecution by jobApplication
@@ -126,7 +139,7 @@ public class JobExecutionService {
                   .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
                 
         List<Long> contractorsId = jobExecutionRepository.findAllContractorByExecutionId(jobExecutionId);
-        List<Contractor> contractors = contractorRepository.findAllById(contractorsId);
+        List<Contractor> contractors = contractorService.findAllById(contractorsId);
 
         if (rating < 0 || rating > 5) {
             throw new InvalidStatusException("Average rating must be between 0 and 5");
@@ -135,10 +148,10 @@ public class JobExecutionService {
         if (jobExecution.getStatus() != JobExecutionStatusEnum.COMPLETED) {
             throw new InvalidStatusException("Job execution must be completed to update the average rating.");    
         }
+
         Rating newRating = new Rating(rating);
         for(Contractor contractor : contractors) {
-            contractor.setAvarageRating(newRating);
-            contractorRepository.save(contractor);
+            contractorService.setAvarageRating(contractor.getId(), newRating);
         }
         jobExecution.setRating(rating);
         jobExecutionRepository.save(jobExecution);
@@ -177,9 +190,67 @@ public class JobExecutionService {
         return jobExecutionRepository.findAllCompletedByContractorId(contractorId);
     }
 
-    
+    public void changeLeader(Long jogExecutionId, Long contractorId) {
+        JobExecution jobExecution = jobExecutionRepository.findById(jogExecutionId)
+                .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jogExecutionId));
+        
+        Contractor contractor = contractorRepository.findById(contractorId)
+                .orElseThrow(() -> new NotFoundException("Contractor not found with id: " + contractorId));
+        
+
+        if (!jobExecution.getContractor().contains(contractor)) {
+            throw new NotFoundException("Contractor is not part of this Job Execution");
+        }
+
+        if (jobExecution.getContractorLeader() != null && jobExecution.getContractorLeader().getId().equals(contractorId)) {
+            return; 
+        }
 
 
-    
+        if (jobExecution.getStatus() != JobExecutionStatusEnum.IN_PROGRESS && jobExecution.getStatus() != JobExecutionStatusEnum.PENDING) {
+            throw new InvalidStatusException("Contractor can only be set as leader when the job execution is in progress or pending.");
+        }
 
+
+
+        jobExecution.setContractorLeader(contractor);
+        applicationEventPublisher.publishEvent(new JobExecutionChangeLeaderEvent(this, jobExecution, contractorId));
+        jobExecutionRepository.save(jobExecution);
+    }
+
+    public void excludeContractor(Long jobExecutionId, Long contractorId) {
+        JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
+                .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
+        
+        Contractor contractor = contractorRepository.findById(contractorId)
+                .orElseThrow(() -> new NotFoundException("Contractor not found with id: " + contractorId));
+        
+        if (!jobExecution.getContractor().contains(contractor)) {
+            throw new NotFoundException("Contractor is not part of this Job Execution");
+        }
+
+        if(jobExecution.getContractor().size() <= 1) {
+            throw new InvalidStatusException("Cannot exclude the last contractor from a job execution. Change the status to CANCELLED or COMPLETED first.");
+        }
+
+        if(jobExecution.getStatus() != JobExecutionStatusEnum.IN_PROGRESS && jobExecution.getStatus() != JobExecutionStatusEnum.PENDING) {
+            throw new InvalidStatusException("Contractor can only be excluded when the job execution is in progress or pending.");
+        }
+
+        if (jobExecution.getContractorLeader() != null && jobExecution.getContractorLeader().getId().equals(contractorId)) {
+            Long newLeaderId = jobExecution.getContractor().stream()
+                    .filter(c -> !c.getId().equals(contractorId))
+                    .findFirst()
+                    .map(Contractor::getId)
+                    .orElse(null);
+            
+            this.changeLeader(jobExecutionId, newLeaderId);
+            jobExecution.getContractor().remove(contractor);
+            jobExecutionRepository.save(jobExecution);
+            return;
+        }
+
+        jobExecution.getContractor().remove(contractor);
+        jobExecutionRepository.save(jobExecution);
+    }
 }

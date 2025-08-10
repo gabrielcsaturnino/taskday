@@ -100,5 +100,6 @@ public class JobExecution {
     public void setCompleted_at(LocalDateTime completed_at) { this.completed_at = completed_at; }
     public void setIn_progress_at(LocalDateTime in_progress_at) { this.in_progress_at = in_progress_at; }
     public void setTotalTime(BigInteger totalTime) { this.totalTime = totalTime; }
+    public void setContractorLeader(Contractor contractorLeader) {this.contractorLeader = contractorLeader; }
     public Contractor getContractorLeader() {return contractorLeader;}
 }

@@ -5,7 +5,6 @@ import com.example.taskday.auxiliary.Email;
 import com.example.taskday.chatroom.ChatRoom;
 import com.example.taskday.chatroom.repository.ChatRoomRepository;
 import com.example.taskday.chatroom.service.ChatRoomService;
-import com.example.taskday.chatroom.service.ChatService;
 import com.example.taskday.infra.security.service.AuthenticationService;
 import com.example.taskday.job.Job;
 import com.example.taskday.job.JobApplication;
@@ -81,7 +80,6 @@ public class ChatControllerIT {
 
     @BeforeEach
     public void setUp() {
-        // Configura o cliente WebSocket que será usado nos testes
         this.stompClient = new WebSocketStompClient(new SockJsClient(
                 List.of(new WebSocketTransport(new StandardWebSocketClient()))));
         this.stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -89,7 +87,6 @@ public class ChatControllerIT {
         transactionTemplate.execute(status -> {
            
         
-        // --- Criação de Dados (Lógica do seu JobLifecycleIT) ---
         CreateAddressRequestDTO address1 = new CreateAddressRequestDTO("Main St", "123", "Apt 456", "Downtown", "12345-678","Cityville");
         CreateContractorRequestDTO contractorDTO = new CreateContractorRequestDTO ("John", "Doe", "123456789", "securePassword123#", "62983374358","jhonDoe@gmail.com", "08063359127","1990-01-01", address1);
         contractorService.createContractor(contractorDTO);
@@ -102,20 +99,16 @@ public class ChatControllerIT {
         Contractor contractor = contractorService.findContractorByEmail(new Email("jhonDoe@gmail.com"));
 
         CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140, address2);
-        jobService.CreateJob(createJobDTO, client);
+        jobService.createJob(createJobDTO, client);
         Job job = jobService.findAllByClientId(client.getId()).get(0);
 
-        // O Contractor se aplica para o Job
         JobApplication jobApplication = jobApplicationService.createJobApplication(job.getId(), contractor.getId());
         
-        // O Client aceita a aplicação, o que deve criar a ChatRoom e ativá-la
         jobApplicationService.updateStatus(jobApplication.getId(), JobApplicationStatusEnum.ACCEPTED);
         
-        // MUDANÇA 3: Recuperar a ChatRoom pelo ID do Job para maior robustez.
         this.activeChatRoom = chatRoomRepository.findAll().stream().filter(chatRoom -> chatRoom.getClient().getId().equals(client.getId()) && chatRoom.getContractor().getId().equals(contractor.getId())).findFirst()
                 .orElseThrow(() -> new RuntimeException("ChatRoom not found for the created Job"));
         System.err.println("ChatRoom created with ID: " + activeChatRoom.getChatRoomStatusEnum());
-        // --- Geração de Tokens JWT para autenticação ---
         CustomUserDetails clientDetails = new CustomUserDetails(client, null);
         UsernamePasswordAuthenticationToken clientAuth = new UsernamePasswordAuthenticationToken(clientDetails, null, clientDetails.getAuthorities());
         this.clientJwt = authenticationService.authenticate(clientAuth);
@@ -129,17 +122,13 @@ public class ChatControllerIT {
 
     @Test
     void sendMessage_whenClientIsParticipant_shouldBroadcastMessage() throws Exception {
-        // --- ARRANGE (Preparação) ---
         StompHeaders connectHeaders = new StompHeaders();
         connectHeaders.add("Authorization", "Bearer " + clientJwt);
         CompletableFuture<MessageDTO> messageFuture = new CompletableFuture<>();
-
-        // Conecta ao WebSocket com o token do cliente
         StompSession stompSession = stompClient.connectAsync(
                 String.format("ws://localhost:%d/ws", port),new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {}
         ).get(2, TimeUnit.SECONDS);
 
-        // Inscreve-se no tópico para ouvir a resposta
         stompSession.subscribe("/topic/chat/" + activeChatRoom.getId(), new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -151,7 +140,6 @@ public class ChatControllerIT {
             }
         });
 
-        // --- ACT (Ação) ---
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setChatRoomId(activeChatRoom.getId());
         messageDTO.setContentMessage("Olá, sou o cliente!");
@@ -162,7 +150,6 @@ public class ChatControllerIT {
 
 
 
-        // --- ASSERT (Verificação) ---
         MessageDTO receivedMessage = messageFuture.get(5, TimeUnit.SECONDS);
         assertNotNull(receivedMessage, "A mensagem não foi recebida do tópico.");
         assertEquals("Olá, sou o cliente!", receivedMessage.getContentMessage());
@@ -171,8 +158,7 @@ public class ChatControllerIT {
 
     @Test
     void sendMessage_whenUserIsNotParticipant_shouldNotBroadcastMessage() throws Exception {
-        // --- ARRANGE (Preparação) ---
-        // Cria um "impostor" e gera um token para ele
+        
         CreateAddressRequestDTO address3 = new CreateAddressRequestDTO("Third St", "789", "zdzddzd", "Suburb", "34567-890","Otherville");
         CreateContractorRequestDTO impostorDTO = new CreateContractorRequestDTO("Impostor", "User", "555555555", "impostorPass123#", "62955555555", "impostor@gmail.com", "11111111111", "1995-05-05", address3);
         contractorService.createContractor(impostorDTO);
@@ -185,22 +171,17 @@ public class ChatControllerIT {
         WebSocketHttpHeaders connectHeaders = new WebSocketHttpHeaders();
         connectHeaders.add("Authorization", "Bearer " + impostorJwt);
 
-        // Conecta como o impostor
         StompSession stompSession = stompClient.connectAsync(
                 String.format("ws://localhost:%d/ws", port), connectHeaders, new StompSessionHandlerAdapter() {}
         ).get(2, TimeUnit.SECONDS);
 
-        // --- ACT (Ação) ---
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setChatRoomId(activeChatRoom.getId());
         messageDTO.setContentMessage("Tentando invadir o chat");
         stompSession.send("/app/chat.sendMessage", messageDTO);
 
-        // --- ASSERT (Verificação) ---
-        // Espera um pouco para garantir que nenhuma mensagem chegue
         Message receivedMessage = messageQueue.poll(2, TimeUnit.SECONDS);
 
-        // A mensagem não deve ser recebida, pois o controller deve bloquear o não-participante
         assertNull(receivedMessage, "Uma mensagem foi enviada indevidamente por um não participante.");
     }
 }

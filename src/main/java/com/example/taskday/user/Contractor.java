@@ -60,11 +60,11 @@ public class Contractor extends User {
         if (newRating == null) {
             throw new NullValueException("Rating cannot be null");   
         }
-        this.avarageRating = newRating.setValue(this.avarageRating, 0.2);
+        this.avarageRating = newRating;
     }
 
-    public double getAvarageRating() {
-        return avarageRating.getValue();
+    public Rating getAvarageRating() {
+        return avarageRating;
     }
 
     public Long getId() {

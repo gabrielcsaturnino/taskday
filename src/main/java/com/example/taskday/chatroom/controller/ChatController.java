@@ -13,6 +13,8 @@ import com.example.taskday.user.CustomUserDetails;
 import com.example.taskday.user.User;
 import com.example.taskday.user.repository.ClientRepository;
 import com.example.taskday.user.repository.ContractorRepository;
+import com.example.taskday.user.service.ClientService;
+import com.example.taskday.user.service.ContractorService;
 import com.example.taskday.user.service.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,10 @@ import java.security.Principal;
 @Controller
 public class ChatController {
 
+    private final ClientService clientService;
+
+    private final ContractorService contractorService;
+
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService; 
     private final ChatRoomRepository chatRoomRepository;
@@ -41,13 +47,15 @@ public class ChatController {
                           SimpMessagingTemplate messagingTemplate,
                             UserDetailsServiceImpl userDetailsService,
                           MessageService messageService,
-                          ChatRoomRepository chatRoomRepository, ClientRepository clientRepository) {
+                          ChatRoomRepository chatRoomRepository, ClientRepository clientRepository, ContractorService contractorService, ClientService clientService) {
         this.messagingTemplate = messagingTemplate;
         this.messageService = messageService;
         this.chatRoomRepository = chatRoomRepository;
         this.contractorRepository = contractorRepository;
         this.clientRepository = clientRepository;
         this.userDetailsService = userDetailsService;
+        this.contractorService = contractorService;
+        this.clientService = clientService;
     }
 
     @MessageMapping("/chat.sendMessage")
@@ -56,7 +64,9 @@ public class ChatController {
         if (principal == null) {
             System.err.println("Internal error: principal is null.");
             return;
-        }
+        }   
+
+
 
         CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
         Long currentUserId = userDetails.getUserId(); 
@@ -82,19 +92,20 @@ public class ChatController {
             System.err.println("Error: chat room is not active.");
             return;
         }
+
         
 
-        if(contractorRepository.findById(currentUserId).isEmpty()) {
-            messageDTO.setOwner("client_owner");
+        if(contractorService.existsById(currentUserId)) {
+            messageDTO.setOwner("contractor_owner");
         }
 
-        if(clientRepository.findById(currentUserId).isEmpty()) {
-           messageDTO.setOwner("contractor_owner");
+        if(clientService.existsById(currentUserId)) {
+           messageDTO.setOwner("client_owner");
         }
         
 
         messageDTO.setTypeMessage("text");
-        messageService.saveMessage(messageDTO);
+        messageService.createMessage(messageDTO);
         String destination = "/topic/chat/" + chatRoom.getId();
         messagingTemplate.convertAndSend(destination, messageDTO);
     }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskday.chatroom.enums.ChatRoomStatusEnum;
+import com.example.taskday.job.Job;
 import com.example.taskday.user.Client;
 import com.example.taskday.user.Contractor;
 
@@ -16,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,15 +25,19 @@ import jakarta.persistence.Table;
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_chat_room")
+    @Column(name = "id_chat_room", nullable = false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_client")
+    @JoinColumn(name = "id_client", nullable = false)
     private Client client;
+    
+    @OneToOne
+    @JoinColumn(name = "id_job", nullable = false)
+    private Job job;
 
     @ManyToOne
-    @JoinColumn(name = "id_contractor")
+    @JoinColumn(name = "id_contractor", nullable = false)
     private Contractor contractor;
 
     @Column(name = "status_chat", nullable = false)
@@ -45,7 +51,8 @@ public class ChatRoom {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updated_at;
 
-    public ChatRoom(Client client, Contractor contractor) {
+    public ChatRoom(Client client, Contractor contractor, Job job) {
+        this.job = job;
         this.client = client;
         this.contractor = contractor;
         chatRoomStatusEnum = ChatRoomStatusEnum.INACTIVE;
@@ -74,5 +81,15 @@ public class ChatRoom {
         return chatRoomStatusEnum;
     }
 
-    
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setContractor(Contractor contractor) {
+        this.contractor = contractor;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
 }
