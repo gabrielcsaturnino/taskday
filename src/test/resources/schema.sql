@@ -6,6 +6,7 @@ CREATE TABLE public.contractor (
     last_name character varying(50) NOT NULL,
     cpf character varying(11) NOT NULL,
     rg_doc character varying(10) NOT NULL,
+    description text NOT NULL,
     date_of_birth date NOT NULL,
     email character varying(100) NOT NULL,
     phone character varying(11) NOT NULL,

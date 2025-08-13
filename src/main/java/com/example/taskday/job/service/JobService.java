@@ -30,7 +30,9 @@ public class JobService {
     }
 
 
-    public void createJob(CreateJobRequestDTO createJobDTO, Client client) {
+    public void createJob(CreateJobRequestDTO createJobDTO, Long id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Client not found with id: " + id));
         Job job = new JobBuilder().fromDTO(createJobDTO, client).build();
         Address address = new AddressBuilder().fromDTO(createJobDTO.createAddressRequestDTO()).withOwner(job).build();
         job.setAddress(address);

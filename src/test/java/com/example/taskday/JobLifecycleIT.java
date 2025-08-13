@@ -87,14 +87,14 @@ public class JobLifecycleIT {
         CreateContractorRequestDTO createContractorDTO = new CreateContractorRequestDTO ("John", "Doe", "123456789", 
                 "securePassword123#",  
                 "62983374358","jhonDoe@gmail.com",
-                "08063359127","1990-01-01", createAddressDTO);
+                "08063359127","1990-01-01","Contractor description", createAddressDTO);
         contractorService.createContractor(createContractorDTO);
 
         CreateAddressRequestDTO createAddressDTO2 = new CreateAddressRequestDTO("Second St", "456", "Suite 789", "Uptown", "23456-789","Townsville");
         CreateContractorRequestDTO createContractorDTO2 = new CreateContractorRequestDTO("Jane", "Smith", "987654921", 
                 "securePassword456#",  
                 "62996109984", "janeSmith@gmail.com",
-                "79109910026", "1990-01-01", createAddressDTO2);
+                "79109910026", "1990-01-01","Contractor description" ,createAddressDTO2);
         contractorService.createContractor(createContractorDTO2);
 
 
@@ -108,7 +108,7 @@ public class JobLifecycleIT {
         Client client = clientRepository.findByEmail(new Email("clientEmail@gmail.com")).get();
         
         CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140, createAddressDTO3);
-        jobService.createJob(createJobDTO, client);
+        jobService.createJob(createJobDTO, client.getId());
     }
 
     @Test
@@ -132,12 +132,10 @@ public class JobLifecycleIT {
         assert jobExecutionRepository.findAllByContractorId(contractor.getId()).get(0).getIn_progress_at() != null;
         Exception ex2 = assertThrows(InvalidStatusException.class, () -> jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5));
         assert ex2.getMessage().equals("Job execution must be completed to update the average rating.");
-        jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.COMPLETED);
+        jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.COMPLETED); 
         jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5);
-        contractorRepository.save(contractor);
         assert jobExecutionRepository.findAllContractorByExecutionId(jobExecution.getId()).get(0) == jobExecution.getContractorLeader().getId();
         assert contractorRepository.findById(contractor.getId()).get().getAvarageRating().getValue() == 4.9;
-        System.out.println("id do contractor:" + contractor.getId());
         List<JobExecution> jobExecutions = jobExecutionRepository.findAllCompletedByContractorId(contractor.getId());
         assert jobExecutions.size() == 1;
 
@@ -196,7 +194,8 @@ public class JobLifecycleIT {
     public void changeLeader() {
         Contractor contractor = contractorService.findContractorByEmail(new Email("jhonDoe@gmail.com"));
         Contractor contractor2 = contractorService.findContractorByEmail(new Email("janeSmith@gmail.com"));
-        Job job = jobService.findById(1L);
+        
+        Job job = jobRepository.findAll().get(0);
         JobApplication jobApplication = jobApplicationService.createJobApplication(job.getId(), contractor.getId());
         jobApplicationService.updateStatus(jobApplication.getId(), JobApplicationStatusEnum.ACCEPTED);
         ChatRoom chatRoom = chatRoomService.findByJobId(job.getId());

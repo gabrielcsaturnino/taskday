@@ -1,6 +1,5 @@
 package com.example.taskday.user.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,17 +10,15 @@ import com.example.taskday.address.dto.CreateAddressRequestDTO;
 import com.example.taskday.address.repository.AddressRepository;
 import com.example.taskday.auxiliary.Address;
 import com.example.taskday.auxiliary.Cpf;
-import com.example.taskday.auxiliary.DateOfBirthday;
 import com.example.taskday.auxiliary.Email;
-import com.example.taskday.auxiliary.Password;
 import com.example.taskday.auxiliary.Phone;
 import com.example.taskday.auxiliary.Rating;
 import com.example.taskday.exception.DuplicateFieldException;
-import com.example.taskday.exception.InvalidFormatException;
 import com.example.taskday.exception.NotFoundException;
 import com.example.taskday.exception.NullValueException;
 import com.example.taskday.user.Contractor;
 import com.example.taskday.user.builder.ContractorBuilder;
+import com.example.taskday.user.dto.ContractorPublicProfileDTO;
 import com.example.taskday.user.dto.CreateContractorRequestDTO;
 import com.example.taskday.user.repository.ClientRepository;
 import com.example.taskday.user.repository.ContractorRepository;
@@ -34,8 +31,6 @@ public class ContractorService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     
-
-
 
     public ContractorService(ContractorRepository contractorRepository, ClientRepository clientRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
         this.contractorRepository = contractorRepository;
@@ -103,10 +98,9 @@ public class ContractorService {
         }
 
         Contractor contractor = findById(id);
-        rating.setValue(contractor.getAvarageRating(), 0.2);
-        contractor.setAvarageRating(rating);
+        Rating newRating = rating.setValue(contractor.getAvarageRating(), 0.2);
+        contractor.setAvarageRating(newRating);
         contractorRepository.save(contractor);
-
     }
 
     public List<Contractor> findAllById(List<Long> ids) {
@@ -114,6 +108,7 @@ public class ContractorService {
             throw new NullValueException("Ids cannot be null or empty");
         }
         return contractorRepository.findAllById(ids);
-    }
+    }   
+
 }
 

@@ -20,6 +20,7 @@ public class ContractorBuilder {
     private Email email;
     private Cpf cpf;
     private DateOfBirthday dateOfBirthday;  
+    private String description;
     
     private final PasswordEncoder passwordEncoder;
     
@@ -38,11 +39,13 @@ public class ContractorBuilder {
         this.email = new Email(createContractorDTO.email());
         this.cpf = new Cpf(createContractorDTO.cpf());
         this.dateOfBirthday = new DateOfBirthday(createContractorDTO.dateOfBirthday());
+        this.description = createContractorDTO.description();
         return this;
     }
 
+    
     public Contractor build() {
-        return new Contractor(firstName, lastName, rgDocument, password, phone, email, cpf, dateOfBirthday);
+        return new Contractor(firstName, lastName, rgDocument, password, phone, email, cpf, dateOfBirthday, description);
     }
         
 }

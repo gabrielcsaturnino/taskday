@@ -26,6 +26,8 @@ public record CreateContractorRequestDTO(
     String cpf,
     @NotBlank(message = "Date of birthday cannot be blank")
     String dateOfBirthday,
+    @NotBlank(message = "Description cannot be blank")
+    String description,
     @Valid
     CreateAddressRequestDTO createAddressRequestDTO
     

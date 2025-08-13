@@ -39,14 +39,25 @@ public class Contractor extends User {
     @Embedded
     private Rating avarageRating = new Rating(5.0);
 
+    @Column(name = "description", nullable = false)
+    private String description;
 
     public Contractor() {
         super();
     }
-    public Contractor(String first_name, String last_name, String rgDoc, Password password, Phone phone, Email email, Cpf cpf, DateOfBirthday dateOfBirthday) {
+    public Contractor(String first_name, String last_name, String rgDoc, Password password, Phone phone, Email email, Cpf cpf, DateOfBirthday dateOfBirthday, String description) {
         super(first_name, last_name, phone, email, cpf, password, rgDoc, dateOfBirthday);
+        this.description = description;
     }
-
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            throw new NullValueException("Description cannot be null or blank");
+        }
+        this.description = description;
+    }
     public void setAddress(Address address){
         if (address == null) {
             throw new NullValueException("Address cannot be null");

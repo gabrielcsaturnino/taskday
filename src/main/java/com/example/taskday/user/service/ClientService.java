@@ -2,7 +2,6 @@ package com.example.taskday.user.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 
 import com.example.taskday.address.builder.AddressBuilder;
 import com.example.taskday.address.dto.CreateAddressRequestDTO;
@@ -76,6 +75,7 @@ public class ClientService {
         return clientRepository.existsById(id);
     }
 
+    
 }
 
 

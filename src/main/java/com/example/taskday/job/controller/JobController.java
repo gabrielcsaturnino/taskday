@@ -39,7 +39,7 @@ public class JobController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Client client = clientService.findByEmail(new Email(userDetails.getUsername()));
         
-        jobService.createJob(createJobDTO, client);
+        jobService.createJob(createJobDTO, client.getId());
         return new ResponseEntity<>("Job created successfully", HttpStatus.CREATED);
     }
 

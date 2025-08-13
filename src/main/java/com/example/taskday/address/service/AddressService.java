@@ -14,10 +14,8 @@ public class AddressService {
         this.addressRepository = addressRepository;
     }
     
-    public Address createAddress(CreateAddressRequestDTO createAddressRequestDTO, Object owner) {
-        if(owner == null) {
-            throw new IllegalArgumentException("Owner cannot be null");
-        }
+    public Address createAddress(CreateAddressRequestDTO createAddressRequestDTO) {
+       
         
         Address address = new AddressBuilder().fromDTO(createAddressRequestDTO).build();
         return addressRepository.save(address);

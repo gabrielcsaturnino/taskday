@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.test.LocalServerPort;// MUDANÇA 1: Importar a anotação correta.
+import org.springframework.boot.web.server.test.LocalServerPort;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -88,7 +88,7 @@ public class ChatControllerIT {
            
         
         CreateAddressRequestDTO address1 = new CreateAddressRequestDTO("Main St", "123", "Apt 456", "Downtown", "12345-678","Cityville");
-        CreateContractorRequestDTO contractorDTO = new CreateContractorRequestDTO ("John", "Doe", "123456789", "securePassword123#", "62983374358","jhonDoe@gmail.com", "08063359127","1990-01-01", address1);
+        CreateContractorRequestDTO contractorDTO = new CreateContractorRequestDTO ("John", "Doe", "123456789", "securePassword123#", "62983374358","jhonDoe@gmail.com", "08063359127","1990-01-01", "Contractor description",address1);
         contractorService.createContractor(contractorDTO);
 
         CreateAddressRequestDTO address2 = new CreateAddressRequestDTO("Second St", "456", "Suite 789", "Uptown", "23456-789","Townsville");
@@ -99,7 +99,7 @@ public class ChatControllerIT {
         Contractor contractor = contractorService.findContractorByEmail(new Email("jhonDoe@gmail.com"));
 
         CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO("Software Development", "Develop a new feature", 140, address2);
-        jobService.createJob(createJobDTO, client);
+        jobService.createJob(createJobDTO, client.getId());
         Job job = jobService.findAllByClientId(client.getId()).get(0);
 
         JobApplication jobApplication = jobApplicationService.createJobApplication(job.getId(), contractor.getId());
@@ -157,10 +157,11 @@ public class ChatControllerIT {
     }
 
     @Test
+    @Transactional
     void sendMessage_whenUserIsNotParticipant_shouldNotBroadcastMessage() throws Exception {
         
         CreateAddressRequestDTO address3 = new CreateAddressRequestDTO("Third St", "789", "zdzddzd", "Suburb", "34567-890","Otherville");
-        CreateContractorRequestDTO impostorDTO = new CreateContractorRequestDTO("Impostor", "User", "555555555", "impostorPass123#", "62955555555", "impostor@gmail.com", "11111111111", "1995-05-05", address3);
+        CreateContractorRequestDTO impostorDTO = new CreateContractorRequestDTO("Impostor", "User", "555555555", "impostorPass123#", "62955555555", "impostor@gmail.com", "11111111111", "1995-05-05",  "Impostor description",address3);
         contractorService.createContractor(impostorDTO);
         Contractor impostor = contractorService.findContractorByEmail(new Email("impostor@gmail.com"));
         
