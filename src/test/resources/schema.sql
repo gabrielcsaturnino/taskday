@@ -99,23 +99,7 @@ CREATE TABLE public.job_execution_contractor (
 );
 
 
-CREATE TABLE public.contractor_experience (
-    id_experience integer NOT NULL,
-    id_contractor integer NOT NULL,
-    job_title character varying(100) NOT NULL,
-    job_description text NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-    
-);
 
-CREATE TABLE public.contractor_skill (
-    id_skill integer NOT NULL,
-    id_contractor integer NOT NULL,
-    skill_name character varying(100) NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
 
 CREATE TABLE public.messages (
     id_message integer NOT NULL,
@@ -153,12 +137,6 @@ ALTER TABLE public.client_jobs ALTER COLUMN id_job SET DEFAULT nextval('public.c
 CREATE SEQUENCE public.contractor_id_contractor_seq AS integer START WITH 1 INCREMENT BY 1;
 ALTER TABLE public.contractor ALTER COLUMN id_contractor SET DEFAULT nextval('public.contractor_id_contractor_seq');
 
-CREATE SEQUENCE public.contractor_experience_id_experience_seq AS integer START WITH 1 INCREMENT BY 1;
-ALTER TABLE public.contractor_experience ALTER COLUMN id_experience SET DEFAULT nextval('public.contractor_experience_id_experience_seq');
-
-CREATE SEQUENCE public.contractor_skill_id_skill_seq AS integer START WITH 1 INCREMENT BY 1;
-ALTER TABLE public.contractor_skill ALTER COLUMN id_skill SET DEFAULT nextval('public.contractor_skill_id_skill_seq');
-
 CREATE SEQUENCE public.messages_id_message_seq AS integer START WITH 1 INCREMENT BY 1;
 ALTER TABLE public.messages ALTER COLUMN id_message SET DEFAULT nextval('public.messages_id_message_seq');
 
@@ -180,8 +158,6 @@ ALTER TABLE public.contractor ADD CONSTRAINT contractor_cpf_contractor_key UNIQU
 ALTER TABLE public.contractor ADD CONSTRAINT contractor_email_key UNIQUE (email);
 ALTER TABLE public.contractor ADD CONSTRAINT contractor_phone_key UNIQUE (phone);
 ALTER TABLE public.contractor ADD CONSTRAINT contractor_rg_contractor_key UNIQUE (rg_doc);
-ALTER TABLE public.contractor_experience ADD CONSTRAINT contractor_experience_pkey PRIMARY KEY (id_experience);
-ALTER TABLE public.contractor_skill ADD CONSTRAINT contractor_skill_pkey PRIMARY KEY (id_skill);
 ALTER TABLE public.messages ADD CONSTRAINT messages_pkey PRIMARY KEY (id_message);
 ALTER TABLE public.client_job_applications ADD CONSTRAINT uq_job_contractor_application UNIQUE (id_job, id_contractor);
 ALTER TABLE public.client_job_execution ADD CONSTRAINT uq_job_execution UNIQUE (id_job);
@@ -202,8 +178,6 @@ ALTER TABLE public.client_job_applications ADD CONSTRAINT client_job_application
 ALTER TABLE public.client_job_execution ADD CONSTRAINT client_job_execution_id_job_fkey FOREIGN KEY (id_job) REFERENCES public.client_jobs(id_job) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_job_execution ADD CONSTRAINT client_job_execution_id_contractor_leader_fkey FOREIGN KEY (id_contractor_leader) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.client_jobs ADD CONSTRAINT client_jobs_id_client_fkey FOREIGN KEY (id_client) REFERENCES public.client(id_client) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE public.contractor_experience ADD CONSTRAINT contractor_experience_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE public.contractor_skill ADD CONSTRAINT contractor_skill_id_contractor_fkey FOREIGN KEY (id_contractor) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.messages ADD CONSTRAINT messages_id_chat_room_fkey FOREIGN KEY (id_chat_room) REFERENCES public.chat_rooms(id_chat_room) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_exec FOREIGN KEY (job_execution_id) REFERENCES public.client_job_execution(id_execution) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE public.job_execution_contractor ADD CONSTRAINT fk_job_exec_contractor_contractor FOREIGN KEY (contractor_id) REFERENCES public.contractor(id_contractor) ON UPDATE CASCADE ON DELETE CASCADE;
