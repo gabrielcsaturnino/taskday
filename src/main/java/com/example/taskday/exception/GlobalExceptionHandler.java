@@ -1,7 +1,6 @@
 // Novo arquivo: src/main/java/com/example/taskday/domain/exception/GlobalExceptionHandler.java
 package com.example.taskday.exception;
 
-import org.springframework.boot.observation.autoconfigure.ObservationProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
