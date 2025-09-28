@@ -61,6 +61,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/authenticate", "/createContractorAccount").permitAll()
             .requestMatchers("/api/v1/main/get").hasRole("CONTRACTOR")
+            .requestMatchers("/api/v1/clients").permitAll()
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()));
