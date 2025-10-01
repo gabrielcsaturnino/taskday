@@ -2,12 +2,10 @@
 package com.example.taskday.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,5 +76,12 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+
+    @ExceptionHandler(InvalidPermissionException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidPermissionException(InvalidPermissionException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 
 }

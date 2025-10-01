@@ -2,7 +2,6 @@ package com.example.taskday.job.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskday.auxiliary.Email;
+import com.example.taskday.exception.InvalidPermissionException;
 import com.example.taskday.job.JobExecution;
 import com.example.taskday.job.enums.JobExecutionStatusEnum;
 import com.example.taskday.job.service.JobExecutionService;
@@ -38,8 +38,13 @@ public class JobExecutionController {
     @PutMapping("/{id}/status")
     public ResponseEntity<String> updateJobExecutionStatus(
             @PathVariable Long id,
-            @RequestParam JobExecutionStatusEnum status) {
-        
+            @RequestParam JobExecutionStatusEnum status,
+            Authentication authentication
+            ) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if(jobExecutionService.getLeader(id).getId() != userDetails.getUserId()){
+            throw new InvalidPermissionException("Only the leader can perform action");
+        }
         jobExecutionService.updateStatus(id, status);
         return ResponseEntity.ok("Job execution status updated successfully");
     }
@@ -47,8 +52,13 @@ public class JobExecutionController {
     @PutMapping("/{id}/rating")
     public ResponseEntity<String> updateJobExecutionRating(
             @PathVariable Long id,
-            @RequestParam double rating) {
-        
+            @RequestParam double rating,
+            Authentication authentication
+            ) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if(jobExecutionService.getClient(id).getId() != userDetails.getUserId()) {
+            throw new InvalidPermissionException("Only the creator can perform action");
+        }        
         jobExecutionService.updateAvarageRating(id, rating);
         return ResponseEntity.ok("Job execution rating updated successfully");
     }
@@ -56,8 +66,13 @@ public class JobExecutionController {
     @PostMapping("/{id}/add-contractor/{contractorId}")
     public ResponseEntity<String> addContractorToJobExecution(
             @PathVariable Long id,
-            @PathVariable Long contractorId) {
-        
+            @PathVariable Long contractorId,
+            Authentication authentication
+            ) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if(jobExecutionService.getClient(id).getId() != userDetails.getUserId()) {
+            throw new InvalidPermissionException("Only the creator can perform action");
+        }
         jobExecutionService.addNewContractor(id, contractorId);
         return ResponseEntity.ok("Contractor added to job execution successfully");
     }

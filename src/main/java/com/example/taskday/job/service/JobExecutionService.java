@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.taskday.auxiliary.Rating;
 import com.example.taskday.exception.ApplyingJobException;
 import com.example.taskday.exception.CreateJobExecutionException;
+import com.example.taskday.exception.InvalidPermissionException;
 import com.example.taskday.exception.InvalidStatusException;
 import com.example.taskday.exception.NotFoundException;
 import com.example.taskday.exception.SaveNullObjectException;
@@ -25,6 +26,7 @@ import com.example.taskday.job.enums.JobExecutionStatusEnum;
 import com.example.taskday.job.event.JobExecutionChangeLeaderEvent;
 import com.example.taskday.job.repository.JobApplicationRepository;
 import com.example.taskday.job.repository.JobExecutionRepository;
+import com.example.taskday.user.Client;
 import com.example.taskday.user.Contractor;
 import com.example.taskday.user.repository.ContractorRepository;
 import com.example.taskday.user.service.ContractorService;
@@ -87,6 +89,7 @@ public class JobExecutionService {
         
         JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
                 .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
+
         
         if (jobExecution.getStatus() == JobExecutionStatusEnum.COMPLETED) {
             throw new InvalidStatusException("Cannot change status from COMPLETED to another status."); 
@@ -134,10 +137,15 @@ public class JobExecutionService {
      * @param rating the new average rating to set
      */
     public void updateAvarageRating(Long jobExecutionId, double rating) {
+
+
         
         JobExecution jobExecution = jobExecutionRepository.findById(jobExecutionId)
                   .orElseThrow(() -> new NotFoundException("JobExecution not found with id: " + jobExecutionId));
-                
+        
+
+      
+        
         List<Long> contractorsId = jobExecutionRepository.findAllContractorByExecutionId(jobExecutionId);
         List<Contractor> contractors = contractorService.findAllById(contractorsId);
 
@@ -252,5 +260,17 @@ public class JobExecutionService {
 
         jobExecution.getContractor().remove(contractor);
         jobExecutionRepository.save(jobExecution);
+    }
+
+    public Client getClient(Long jobExecutionId) {
+        Optional<JobExecution> jobExecutionOpt = jobExecutionRepository.findById(jobExecutionId);
+        JobExecution jobExecution = jobExecutionOpt.get();
+        return jobExecution.getJob().getClient();
+    }
+
+    public Contractor getLeader(Long jobExecutionId){
+        Optional<JobExecution> jobExecutionOpt = jobExecutionRepository.findById(jobExecutionId);
+        JobExecution jobExecution = jobExecutionOpt.get();
+        return jobExecution.getContractorLeader();
     }
 }

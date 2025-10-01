@@ -24,4 +24,6 @@ public interface JobExecutionRepository extends JpaRepository<JobExecution, Long
     List<Long> findAllContractorByExecutionId(Long jobExecutionId);
 
     JobExecution findByJobId(Long jobId);
+
+    
 }
