@@ -31,10 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/resources/private-key.pem
 .gitignore
-src/main/resources/public-key.pem
-src/main/resources/application.properties
 pom.xml
-src/test/resources/schema.sql
 pom.xml

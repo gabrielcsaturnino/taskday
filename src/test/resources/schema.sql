@@ -13,7 +13,7 @@ CREATE TABLE public.contractor (
     avarage_rating numeric(3,2) DEFAULT 0.00 NOT NULL,
     hash_password character varying(255) NOT NULL,
     status_account boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_att timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

@@ -1,14 +1,11 @@
 package com.example.taskday.job.event;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.example.taskday.chatroom.ChatRoom;
 import com.example.taskday.chatroom.enums.ChatRoomStatusEnum;
 import com.example.taskday.chatroom.service.ChatRoomService;
-import com.example.taskday.job.JobExecution;
-import com.example.taskday.job.repository.JobExecutionRepository;
 import com.example.taskday.job.service.JobExecutionService;
 import com.example.taskday.user.service.ClientService;
 
