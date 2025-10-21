@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 import com.example.taskday.address.builder.AddressBuilder;
 import com.example.taskday.address.dto.CreateAddressRequestDTO;
@@ -11,6 +13,7 @@ import com.example.taskday.address.repository.AddressRepository;
 import com.example.taskday.auxiliary.Address;
 import com.example.taskday.auxiliary.Cpf;
 import com.example.taskday.auxiliary.Email;
+import com.example.taskday.auxiliary.Password;
 import com.example.taskday.auxiliary.Phone;
 import com.example.taskday.auxiliary.Rating;
 import com.example.taskday.exception.DuplicateFieldException;
@@ -20,6 +23,8 @@ import com.example.taskday.user.Contractor;
 import com.example.taskday.user.builder.ContractorBuilder;
 import com.example.taskday.user.dto.ContractorPublicProfileDTO;
 import com.example.taskday.user.dto.CreateContractorRequestDTO;
+import com.example.taskday.user.dto.UpdateContractorRequestDTO;
+import com.example.taskday.user.dto.ChangePasswordRequestDTO;
 import com.example.taskday.user.repository.ClientRepository;
 import com.example.taskday.user.repository.ContractorRepository;
 
@@ -78,6 +83,7 @@ public class ContractorService {
         return contractorRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Contractor not found with identifier: " + email));
     }
     
+    @Cacheable(value = "contractors", key = "#id")
     public Contractor findById(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("Id cannot be null"); 
@@ -108,7 +114,73 @@ public class ContractorService {
             throw new NullValueException("Ids cannot be null or empty");
         }
         return contractorRepository.findAllById(ids);
-    }   
+    }
+
+    @CacheEvict(value = "contractors", key = "#id")
+    public Contractor updateContractor(Long id, UpdateContractorRequestDTO updateContractorDTO) {
+        Contractor contractor = findById(id);
+        
+        // Verificar se email já está em uso por outro usuário
+        if (!contractor.getEmailObject().getEmail().equals(updateContractorDTO.email())) {
+            ensureUniqueEmail(new Email(updateContractorDTO.email()));
+        }
+        
+        // Verificar se telefone já está em uso por outro usuário
+        if (!contractor.getPhone().getPhoneNumber().equals(updateContractorDTO.phone())) {
+            ensureUniquePhone(new Phone(updateContractorDTO.phone()));
+        }
+        
+        contractor.setFirstName(updateContractorDTO.firstName());
+        contractor.setLastName(updateContractorDTO.lastName());
+        contractor.setPhone(new Phone(updateContractorDTO.phone()));
+        contractor.setEmail(new Email(updateContractorDTO.email()));
+        contractor.setDescription(updateContractorDTO.description());
+        
+        return contractorRepository.save(contractor);
+    }
+
+    public void changePassword(Long id, ChangePasswordRequestDTO changePasswordDTO) {
+        Contractor contractor = findById(id);
+        
+        // Verificar se a senha atual está correta
+        if (!passwordEncoder.matches(changePasswordDTO.currentPassword(), contractor.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        
+        contractor.setPassword(Password.create(changePasswordDTO.newPassword(), passwordEncoder));
+        contractorRepository.save(contractor);
+    }
+
+    public void deactivateAccount(Long id) {
+        Contractor contractor = findById(id);
+        contractor.setStatusAccount(false);
+        contractorRepository.save(contractor);
+    }
+
+    public void activateAccount(Long id) {
+        Contractor contractor = findById(id);
+        contractor.setStatusAccount(true);
+        contractorRepository.save(contractor);
+    }
+
+    public List<Contractor> searchContractors(String name, String location, Double minRating, Double maxRating) {
+        // Implementar busca com critérios
+        return contractorRepository.findAll();
+    }
+
+    private void ensureUniqueEmail(Email email) {
+        boolean emailInUse = contractorRepository.existsByEmail(email) || clientRepository.existsByEmail(email);
+        if (emailInUse) {
+            throw new DuplicateFieldException("Email already in use");
+        }
+    }
+
+    private void ensureUniquePhone(Phone phone) {
+        boolean phoneInUse = contractorRepository.existsByPhone(phone) || clientRepository.existsByPhone(phone);
+        if (phoneInUse) {
+            throw new DuplicateFieldException("Phone already in use");
+        }
+    }
 
 }
 

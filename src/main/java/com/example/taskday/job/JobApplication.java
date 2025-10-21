@@ -2,6 +2,7 @@ package com.example.taskday.job;
 
 import com.example.taskday.exception.NullValueException;
 import com.example.taskday.job.enums.JobApplicationStatusEnum;
+import com.example.taskday.job.enums.ApplicationStatusEnum;
 import com.example.taskday.user.Contractor;
 
 import jakarta.persistence.Column;
@@ -14,11 +15,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
-enum application_status_enum {
-    submitted,
-    rejected,
-    accepted
-}
 
 @Entity
 @Table(name = "client_job_applications")
@@ -44,7 +40,7 @@ public class JobApplication {
     public JobApplication(Job job, Contractor contractor) {
         this.job = job;
         this.contractor = contractor;
-        this.statusApplication = statusApplication.SUBMITTED;
+        this.statusApplication = JobApplicationStatusEnum.SUBMITTED;
     }
     
 

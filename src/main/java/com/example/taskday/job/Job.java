@@ -3,6 +3,7 @@ package com.example.taskday.job;
 import com.example.taskday.auxiliary.Address;
 import com.example.taskday.exception.InvalidFormatException;
 import com.example.taskday.exception.NullValueException;
+import com.example.taskday.job.enums.JobStatusEnum;
 import com.example.taskday.user.Client;
 
 import jakarta.persistence.CascadeType;
@@ -16,12 +17,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import java.time.LocalDateTime;
 
 
-enum job_status_enum {
-    ACTIVE,
-    INACTIVE
-}
 
 @Entity
 @Table(name = "client_jobs")
@@ -42,7 +42,7 @@ public class Job {
     private int pricePerHour;
     
     @Column(name = "job_status", nullable = false)
-    private job_status_enum jobStatus;
+    private JobStatusEnum jobStatus;
     
     @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
@@ -52,6 +52,12 @@ public class Job {
     @JoinColumn(name = "id_client", referencedColumnName = "id_client")
     private Client client;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
 
     public Job() {
     }
@@ -60,7 +66,7 @@ public class Job {
         this.title = title;
         this.description = description;
         this.pricePerHour = pricePerHour;
-        this.jobStatus = job_status_enum.ACTIVE;
+        this.jobStatus = JobStatusEnum.ACTIVE;
         this.client = client;
     }
 
@@ -74,7 +80,7 @@ public class Job {
 
 
     
-    public void setJobStatus(job_status_enum jobStatus){
+    public void setJobStatus(JobStatusEnum jobStatus){
         if (this.jobStatus == jobStatus) {
             return;   
         }
@@ -102,7 +108,7 @@ public class Job {
         this.title = title;
     }
 
-    public job_status_enum getJobStatus() {
+    public JobStatusEnum getJobStatus() {
         return jobStatus;
     }
 

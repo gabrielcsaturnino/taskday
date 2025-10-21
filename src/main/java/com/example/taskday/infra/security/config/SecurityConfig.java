@@ -59,9 +59,11 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/authenticate", "/createContractorAccount").permitAll()
-            .requestMatchers("/api/v1/main/get").hasRole("CONTRACTOR")
-            .requestMatchers("/api/v1/clients").permitAll()
+            .requestMatchers("/authenticate", "/api/v1/clients", "/api/v1/contractors").permitAll()
+            .requestMatchers("/api/v1/jobs/active", "/api/v1/jobs/search").permitAll()
+            .requestMatchers("/api/v1/contractors/search").permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+            .requestMatchers("/actuator/**").hasRole("ADMIN")
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()));

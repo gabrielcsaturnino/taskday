@@ -106,6 +106,29 @@ public abstract class User {
         return updated_at;
     }
 
-    
-    
+    // Setter methods
+    public void setFirstName(String firstName) {
+        this.first_name = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.last_name = lastName;
+    }
+
+    public void setPhone(Phone phone) {
+        this.phone = phone;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+
+    public void setStatusAccount(boolean statusAccount) {
+        this.status_account = statusAccount;
+    }
+
+    public void setPassword(Password password) {
+        this.password = password;
+    }
+
 } 

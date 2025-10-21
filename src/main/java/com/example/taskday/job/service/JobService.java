@@ -12,9 +12,14 @@ import com.example.taskday.exception.NotFoundException;
 import com.example.taskday.job.Job;
 import com.example.taskday.job.builder.JobBuilder;
 import com.example.taskday.job.dto.CreateJobRequestDTO;
+import com.example.taskday.job.dto.UpdateJobRequestDTO;
+import com.example.taskday.job.dto.JobSearchDTO;
+import com.example.taskday.job.enums.JobStatusEnum;
 import com.example.taskday.job.repository.JobRepository;
 import com.example.taskday.user.Client;
 import com.example.taskday.user.repository.ClientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class JobService {
@@ -48,6 +53,45 @@ public class JobService {
 
     public List<Job> findAllByClientId(Long clientId) {
         return jobRepository.findAllByClientId(clientId);
+    }
+
+    public Job updateJob(Long id, UpdateJobRequestDTO updateJobDTO) {
+        Job job = findById(id);
+        
+        job.setTitle(updateJobDTO.title());
+        job.setDescription(updateJobDTO.description());
+        job.setPricePerHour(updateJobDTO.pricePerHour());
+        
+        return jobRepository.save(job);
+    }
+
+    public void deleteJob(Long id) {
+        Job job = findById(id);
+        job.setJobStatus(JobStatusEnum.INACTIVE);
+        jobRepository.save(job);
+    }
+
+    public void closeJob(Long id) {
+        Job job = findById(id);
+        job.setJobStatus(JobStatusEnum.INACTIVE);
+        jobRepository.save(job);
+    }
+
+    public List<Job> searchJobs(JobSearchDTO searchDTO) {
+        // Implementar busca com filtros
+        return jobRepository.findAll();
+    }
+
+    public List<Job> findJobsByLocation(String location) {
+        return jobRepository.findAll();
+    }
+
+    public List<Job> findJobsByPriceRange(Integer minPrice, Integer maxPrice) {
+        return jobRepository.findAll();
+    }
+
+    public List<Job> findActiveJobs() {
+        return jobRepository.findAll();
     }
 
 }

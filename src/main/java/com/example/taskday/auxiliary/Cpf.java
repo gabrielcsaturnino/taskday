@@ -3,6 +3,8 @@ package com.example.taskday.auxiliary;
 import java.util.regex.Pattern;
 
 import com.example.taskday.exception.InvalidFormatException;
+import br.com.caelum.stella.validation.CPFValidator;
+import br.com.caelum.stella.validation.InvalidStateException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -28,6 +30,15 @@ public class Cpf {
     
         if(!CPF_PATTERN.matcher(value).matches()) {
             throw new InvalidFormatException("Invalid CPF format: " + value);
+        }
+        
+        // Validar CPF usando Caelum Stella
+        String cleanCpf = value.replaceAll("[^0-9]", "");
+        CPFValidator validator = new CPFValidator();
+        try {
+            validator.assertValid(cleanCpf);
+        } catch (InvalidStateException e) {
+            throw new InvalidFormatException("Invalid CPF: " + value);
         }
     }
 

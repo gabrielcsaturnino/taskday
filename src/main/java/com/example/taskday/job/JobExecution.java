@@ -12,7 +12,6 @@ import com.example.taskday.job.enums.JobApplicationStatusEnum;
 import com.example.taskday.job.enums.JobExecutionStatusEnum;
 import com.example.taskday.user.Contractor;
 
-import io.micrometer.common.lang.internal.Contract;
 import jakarta.persistence.*;
 
 @Entity

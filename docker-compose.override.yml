@@ -1,0 +1,43 @@
+# Docker Compose Override for Development
+# This file is automatically loaded by docker-compose and overrides the main docker-compose.yml
+
+version: '3.8'
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: taskdaydb
+      POSTGRES_USER: gabriel
+      POSTGRES_PASSWORD: 123
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+      - postgres_dev_data:/var/lib/postgresql/data
+
+  pgadmin:
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@taskday.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+
+  taskday-app:
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskdaydb
+      SPRING_DATASOURCE_USERNAME: gabriel
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_FLYWAY_ENABLED: false  # Flyway desabilitado - usando script de inicialização
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none  # Não gerar schema automaticamente
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+
+volumes:
+  postgres_dev_data:
+    driver: local
+

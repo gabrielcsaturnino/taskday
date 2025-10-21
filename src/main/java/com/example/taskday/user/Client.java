@@ -69,5 +69,11 @@ public class Client extends User{
     }
 
 
+    // remover esse metodo
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+
 
 }

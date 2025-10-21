@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: taskday-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: taskdaydb
+      POSTGRES_USER: gabriel
+      POSTGRES_PASSWORD: 123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - taskday-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gabriel -d taskdaydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin - Database Administration Tool
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: taskday-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@taskday.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - taskday-network
+
+  # TaskDay Application (Spring Boot)
+  taskday-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskday-app
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/taskdaydb
+      SPRING_DATASOURCE_USERNAME: gabriel
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_FLYWAY_ENABLED: false
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - taskday-network
+    volumes:
+      - ./uploads:/app/uploads
+    profiles:
+      - app
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  taskday-network:
+    driver: bridge
+

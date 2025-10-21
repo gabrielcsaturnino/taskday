@@ -1,0 +1,16 @@
+{
+  "url": "/v3/api-docs",
+  "deepLinking": true,
+  "displayOperationId": false,
+  "defaultModelsExpandDepth": 1,
+  "defaultModelExpandDepth": 1,
+  "defaultModelRendering": "example",
+  "displayRequestDuration": true,
+  "docExpansion": "none",
+  "filter": true,
+  "operationsSorter": "alpha",
+  "showExtensions": false,
+  "showCommonExtensions": false,
+  "tagsSorter": "alpha",
+  "tryItOutEnabled": true
+}
