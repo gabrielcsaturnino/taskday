@@ -92,7 +92,7 @@ public class ChatControllerIT {
         contractorService.createContractor(contractorDTO);
 
         CreateAddressRequestDTO address2 = new CreateAddressRequestDTO("Second St", "456", "Suite 789", "Uptown", "23456-789","Townsville");
-        CreateClientRequestDTO clientDTO = new CreateClientRequestDTO("Client", "User", "987654329", "clientPassword123#", "62998765432", "clientEmail@gmail.com", "02920643223", "1990-01-01", address2);
+        CreateClientRequestDTO clientDTO = new CreateClientRequestDTO("Client", "User", "987654329", "clientPassword123#", "62998765432", "clientEmail@gmail.com", "36910456009", "1990-01-01", address2);
         clientService.createClient(clientDTO);
 
         Client client = clientService.findByEmail(new Email("clientEmail@gmail.com"));
