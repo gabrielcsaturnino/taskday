@@ -67,8 +67,8 @@ public class JobApplicationIT {
                 "Client St", "123", "Apt 1", "Downtown", "12345-678", "Test City"
         );
         CreateClientRequestDTO createClientDTO = new CreateClientRequestDTO(
-                "Test", "Client", "123456789", "password123",
-                "1234567890", "client@test.com", "12345678901",
+                "Test", "Client", "123456789", "Password123!",
+                "(11) 99999-9999", "client@test.com", "11144477735",
                 "1990-01-01", clientAddress
         );
         clientService.createClient(createClientDTO);
@@ -79,8 +79,8 @@ public class JobApplicationIT {
                 "Contractor St", "456", "Suite 2", "Uptown", "23456-789", "Test City"
         );
         CreateContractorRequestDTO createContractorDTO = new CreateContractorRequestDTO(
-                "Test", "Contractor", "987654321", "password123",
-                "0987654321", "contractor@test.com", "98765432109",
+                "Test", "Contractor", "987654321", "Password123!",
+                "(11) 98888-8888", "contractor@test.com", "08063359127",
                 "1990-01-01", "Experienced contractor", contractorAddress
         );
         contractorService.createContractor(createContractorDTO);
