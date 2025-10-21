@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Suppress EI_EXPOSE_REP and EI_EXPOSE_REP2 for JPA entities -->
+    <Match>
+        <Class name="com.example.taskday.user.User"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.user.User"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP for JPA entities that need to expose relationships -->
+    <Match>
+        <Class name="com.example.taskday.auxiliary.Address"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.auxiliary.Address"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP2 for Spring dependency injection -->
+    <Match>
+        <Class name="com.example.taskday.user.service.ClientService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.user.service.ContractorService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.user.controller.ContractorController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress URF_UNREAD_FIELD for JPA entities with unused fields -->
+    <Match>
+        <Class name="com.example.taskday.auxiliary.Address"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.auxiliary.DateOfBirthday"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.Job"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.message.Message"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.ChatRoom"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    
+    <!-- Suppress URF_UNREAD_FIELD for controllers with unused repositories -->
+    <Match>
+        <Class name="com.example.taskday.chatroom.controller.ChatController"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.controller.ChatRoomController"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.event.JobApplicationAcceptedListener"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP for JPA entities that need to expose relationships -->
+    <Match>
+        <Class name="com.example.taskday.job.Job"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.Job"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.JobApplication"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.JobApplication"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.JobExecution"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.JobExecution"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.ChatRoom"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.ChatRoom"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.message.Message"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.message.Message"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP2 for Spring dependency injection in controllers -->
+    <Match>
+        <Class name="com.example.taskday.job.controller.JobController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.controller.JobApplicationController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.controller.JobExecutionController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.controller.ChatController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.controller.ChatRoomController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.controller.FileController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP2 for Spring services -->
+    <Match>
+        <Class name="com.example.taskday.job.service.JobService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.service.JobExecutionService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.chatroom.service.ChatRoomService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.address.service.AddressService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP for DTOs that need to expose data -->
+    <Match>
+        <Class name="com.example.taskday.job.dto.JobResponseDTO"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.dto.JobResponseDTO"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP for event classes -->
+    <Match>
+        <Class name="com.example.taskday.job.event.JobApplicationAcceptedEvent"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.event.JobApplicationAcceptedEvent"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.event.JobExecutionChangeLeaderEvent"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.event.JobExecutionChangeLeaderEvent"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.job.event.JobApplicationAcceptedListener"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    
+    <!-- Suppress EI_EXPOSE_REP2 for builders -->
+    <Match>
+        <Class name="com.example.taskday.job.builder.JobBuilder"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="com.example.taskday.message.builder.MessageBuilder"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>
