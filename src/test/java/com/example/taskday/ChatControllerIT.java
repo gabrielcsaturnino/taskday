@@ -161,7 +161,7 @@ public class ChatControllerIT {
     void sendMessage_whenUserIsNotParticipant_shouldNotBroadcastMessage() throws Exception {
         
         CreateAddressRequestDTO address3 = new CreateAddressRequestDTO("Third St", "789", "zdzddzd", "Suburb", "34567-890","Otherville");
-        CreateContractorRequestDTO impostorDTO = new CreateContractorRequestDTO("Impostor", "User", "555555555", "impostorPass123#", "62955555555", "impostor@gmail.com", "11111111111", "1995-05-05",  "Impostor description",address3);
+        CreateContractorRequestDTO impostorDTO = new CreateContractorRequestDTO("Impostor", "User", "555555555", "impostorPass123#", "62955555555", "impostor@gmail.com", "08063359127", "1995-05-05",  "Impostor description",address3);
         contractorService.createContractor(impostorDTO);
         Contractor impostor = contractorService.findContractorByEmail(new Email("impostor@gmail.com"));
         
