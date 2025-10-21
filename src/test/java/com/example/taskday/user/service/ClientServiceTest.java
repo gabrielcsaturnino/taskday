@@ -53,16 +53,18 @@ class ClientServiceTest {
         testClient.setFirstName("John");
         testClient.setLastName("Doe");
         testClient.setEmail(new Email("john@example.com"));
-        testClient.setPhone(new Phone("1234567890"));
+        testClient.setPhone(new Phone("(11) 99999-9999"));
 
         createClientDTO = new CreateClientRequestDTO(
-                "John", "Doe", "123456789", "password123",
-                "1234567890", "john@example.com", "12345678901",
-                "1990-01-01", null
+                "John", "Doe", "123456789", "Password123!",
+                "(11) 99999-9999", "john@example.com", "11144477735",
+                "1990-01-01", new com.example.taskday.address.dto.CreateAddressRequestDTO(
+                        "Rua Teste", "123", "Centro", "São Paulo", "SP", "01234567"
+                )
         );
 
         updateClientDTO = new UpdateClientRequestDTO(
-                "Jane", "Smith", "0987654321", "jane@example.com"
+                "Jane", "Smith", "(11) 98888-8888", "jane@example.com"
         );
     }
 
