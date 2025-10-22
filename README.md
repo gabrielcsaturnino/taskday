@@ -1,6 +1,27 @@
 # TaskDay - Plataforma de Freelancers
 
-Uma plataforma completa para conectar clientes e freelancers, desenvolvida com Spring Boot.
+Uma plataforma completa para conectar clientes e freelancers, desenvolvida com Spring Boot e React Native.
+
+## 📱 **Arquitetura Completa**
+
+### **🔧 Backend (Spring Boot)**
+- API REST completa
+- Autenticação JWT
+- Banco PostgreSQL
+- Cache Redis
+- Documentação Swagger
+
+### **📱 Frontend Mobile (React Native + TypeScript)**
+- App nativo para iOS e Android
+- Integração completa com backend
+- Interface moderna e responsiva
+- Navegação fluida
+
+### **🐳 Infraestrutura**
+- Docker para desenvolvimento e produção
+- CI/CD automatizado
+- Monitoramento e logs
+- Deploy seguro
 
 ## 🚀 Funcionalidades Implementadas
 
@@ -187,6 +208,8 @@ Uma plataforma completa para conectar clientes e freelancers, desenvolvida com S
 
 ## 🚀 Como Executar
 
+### **🔧 Backend (Spring Boot)**
+
 1. **Configurar PostgreSQL**
    ```bash
    # Criar banco de dados
@@ -207,6 +230,44 @@ Uma plataforma completa para conectar clientes e freelancers, desenvolvida com S
 4. **Acessar a documentação**
    - Swagger UI: http://localhost:8080/swagger-ui.html
    - API Docs: http://localhost:8080/api-docs
+
+### **📱 Frontend Mobile (React Native)**
+
+1. **Setup inicial**
+   ```bash
+   ./scripts/mobile-dev.sh setup
+   ```
+
+2. **Iniciar ambiente de desenvolvimento**
+   ```bash
+   ./scripts/mobile-dev.sh start
+   ```
+
+3. **Executar no dispositivo**
+   ```bash
+   # Android
+   ./scripts/mobile-dev.sh android
+   
+   # iOS
+   ./scripts/mobile-dev.sh ios
+   ```
+
+### **🐳 Docker (Desenvolvimento Completo)**
+
+1. **Iniciar ambiente completo**
+   ```bash
+   docker-compose -f docker-compose.mobile.yml up -d
+   ```
+
+2. **Verificar serviços**
+   ```bash
+   docker-compose -f docker-compose.mobile.yml ps
+   ```
+
+3. **Acessar aplicações**
+   - Backend: http://localhost:8080
+   - pgAdmin: http://localhost:8081
+   - Mobile: Metro bundler na porta 8081
 
 ## 📊 Monitoramento
 
