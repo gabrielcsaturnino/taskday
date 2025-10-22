@@ -21,8 +21,7 @@ WORKDIR /app
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # Instalar curl para health check
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
-
+RUN apk add --no-cache curl
 # Copiar JAR do build stage
 COPY --from=builder /app/target/*.jar app.jar
 
