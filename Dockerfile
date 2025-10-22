@@ -10,6 +10,8 @@ COPY .mvn .mvn
 RUN mvn dependency:go-offline -B
 
 COPY src ./src
+COPY checkstyle.xml .
+COPY spotbugs-exclude.xml .
 RUN mvn clean package -DskipTests
 
 # Runtime stage
@@ -18,8 +20,10 @@ WORKDIR /app
 
 # Criar usuário não-root para segurança
 RUN addgroup -S appuser && adduser -S appuser -G appuser
-# Instalar curl para health check
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+# Instalar curl para health check (Alpine usa apk, não apt-get)
+RUN apk add --no-cache curl
+
 # Copiar JAR do build stage
 COPY --from=builder /app/target/*.jar app.jar
 
