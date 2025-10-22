@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: gabrielcsaturnino/taskday
 
 jobs:
   # Job 1: Análise de Código
@@ -121,6 +121,9 @@ jobs:
     needs: [code-quality, test, security]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout code
