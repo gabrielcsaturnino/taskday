@@ -5,10 +5,13 @@ import com.example.taskday.exception.InvalidFormatException;
 import com.example.taskday.exception.NullValueException;
 import com.example.taskday.job.enums.JobStatusEnum;
 import com.example.taskday.user.Client;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +28,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "client_jobs")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job {
     
     @Id
@@ -42,6 +46,7 @@ public class Job {
     private int pricePerHour;
     
     @Column(name = "job_status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private JobStatusEnum jobStatus;
     
     @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -66,7 +71,7 @@ public class Job {
         this.title = title;
         this.description = description;
         this.pricePerHour = pricePerHour;
-        this.jobStatus = JobStatusEnum.ACTIVE;
+        this.jobStatus = JobStatusEnum.active;
         this.client = client;
     }
 
@@ -122,6 +127,18 @@ public class Job {
 
     public Client getClient() {
         return client;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     @PrePersist

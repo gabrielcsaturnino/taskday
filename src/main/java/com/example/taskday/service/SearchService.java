@@ -22,7 +22,7 @@ public class SearchService {
     }
     
     public List<Job> searchJobs(JobSearchDTO searchDTO) {
-        // Implementar busca avançada de jobs
+        // Implementar busca avançada de jobs        
         return jobRepository.findAll();
     }
     

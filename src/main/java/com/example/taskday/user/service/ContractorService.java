@@ -98,14 +98,14 @@ public class ContractorService {
         return contractorRepository.existsById(id);
     }
 
-    public void setAvarageRating(Long id, Rating rating) {
+    public void setAverageRating(Long id, Rating rating) {
         if (id == null || rating == null) {
             throw new NullValueException("Id or Rating cannot be null");
         }
 
         Contractor contractor = findById(id);
-        Rating newRating = rating.setValue(contractor.getAvarageRating(), 0.2);
-        contractor.setAvarageRating(newRating);
+        Rating newRating = rating.setValue(contractor.getAverageRating(), 0.2);
+        contractor.setAverageRating(newRating);
         contractorRepository.save(contractor);
     }
 

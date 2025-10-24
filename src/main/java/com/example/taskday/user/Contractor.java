@@ -11,6 +11,7 @@ import com.example.taskday.auxiliary.Password;
 import com.example.taskday.auxiliary.Phone;
 import com.example.taskday.auxiliary.Rating;
 import com.example.taskday.exception.NullValueException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,6 +26,7 @@ import jakarta.persistence.Table;
 
 @Table(name = "contractor") 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Contractor extends User {
     
 
@@ -37,7 +39,7 @@ public class Contractor extends User {
     private List<Address> addresses = new ArrayList<>();
 
     @Embedded
-    private Rating avarageRating = new Rating(5.0);
+    private Rating averageRating = new Rating(5.0);
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -67,15 +69,15 @@ public class Contractor extends User {
     }
 
 
-    public void setAvarageRating(Rating newRating) {
+    public void setAverageRating(Rating newRating) {
         if (newRating == null) {
             throw new NullValueException("Rating cannot be null");   
         }
-        this.avarageRating = newRating;
+        this.averageRating = newRating;
     }
 
-    public Rating getAvarageRating() {
-        return avarageRating;
+    public Rating getAverageRating() {
+        return averageRating;
     }
 
     public Long getId() {

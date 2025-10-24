@@ -55,8 +55,8 @@ public class MetricsController {
     public ResponseEntity<Map<String, Object>> getActiveJobsMetrics() {
         Map<String, Object> metrics = new HashMap<>();
         
-        long activeJobs = jobRepository.countByJobStatus(com.example.taskday.job.enums.JobStatusEnum.ACTIVE);
-        long inactiveJobs = jobRepository.countByJobStatus(com.example.taskday.job.enums.JobStatusEnum.INACTIVE);
+        long activeJobs = jobRepository.countByJobStatus(com.example.taskday.job.enums.JobStatusEnum.active);
+        long inactiveJobs = jobRepository.countByJobStatus(com.example.taskday.job.enums.JobStatusEnum.inactive);
         
         metrics.put("activeJobs", activeJobs);
         metrics.put("inactiveJobs", inactiveJobs);

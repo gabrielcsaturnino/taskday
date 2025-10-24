@@ -84,8 +84,8 @@ public class JobExecution {
     public double getRating() { return rating; }
     public LocalDateTime getCreated_at() { return created_at; }
     public LocalDateTime getUpdated_at() { return updated_at; }
-    public LocalDateTime getCompleted_at() { return completed_at; }
-    public LocalDateTime getIn_progress_at() { return in_progress_at; }
+    public LocalDateTime getCompletedAt() { return completed_at; }
+    public LocalDateTime getInProgressAt() { return in_progress_at; }
     public BigInteger getTotalTime() { return totalTime; }
 
     public void setStatus(JobExecutionStatusEnum status) {
@@ -96,8 +96,8 @@ public class JobExecution {
     }
     public void setStatusExecution(boolean statusExecution) { this.statusExecution = statusExecution; }
     public void setRating(double rating) {this.rating = rating;}
-    public void setCompleted_at(LocalDateTime completed_at) { this.completed_at = completed_at; }
-    public void setIn_progress_at(LocalDateTime in_progress_at) { this.in_progress_at = in_progress_at; }
+    public void setCompletedAt(LocalDateTime completed_at) { this.completed_at = completed_at; }
+    public void setInProgressAt(LocalDateTime in_progress_at) { this.in_progress_at = in_progress_at; }
     public void setTotalTime(BigInteger totalTime) { this.totalTime = totalTime; }
     public void setContractorLeader(Contractor contractorLeader) {this.contractorLeader = contractorLeader; }
     public Contractor getContractorLeader() {return contractorLeader;}

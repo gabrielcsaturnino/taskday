@@ -8,7 +8,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class Rating {
     
-    @Column(name = "avarage_rating", nullable = false, columnDefinition = "DECIMAL(2,1)")
+    @Column(name = "average_rating", nullable = false, columnDefinition = "DECIMAL(2,1)")
     private double value;
 
     public Rating () {}

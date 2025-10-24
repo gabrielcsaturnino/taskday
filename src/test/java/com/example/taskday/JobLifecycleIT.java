@@ -129,13 +129,13 @@ public class JobLifecycleIT {
 
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.IN_PROGRESS);
 
-        assert jobExecutionRepository.findAllByContractorId(contractor.getId()).get(0).getIn_progress_at() != null;
-        Exception ex2 = assertThrows(InvalidStatusException.class, () -> jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5));
+        assert jobExecutionRepository.findAllByContractorId(contractor.getId()).get(0).getInProgressAt() != null;
+        Exception ex2 = assertThrows(InvalidStatusException.class, () -> jobExecutionService.updateAverageRating(jobExecution.getId(), 4.5));
         assert ex2.getMessage().equals("Job execution must be completed to update the average rating.");
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.COMPLETED); 
-        jobExecutionService.updateAvarageRating(jobExecution.getId(), 4.5);
+        jobExecutionService.updateAverageRating(jobExecution.getId(), 4.5);
         assert jobExecutionRepository.findAllContractorByExecutionId(jobExecution.getId()).get(0) == jobExecution.getContractorLeader().getId();
-        assert contractorRepository.findById(contractor.getId()).get().getAvarageRating().getValue() == 4.9;
+        assert contractorRepository.findById(contractor.getId()).get().getAverageRating().getValue() == 4.9;
         List<JobExecution> jobExecutions = jobExecutionRepository.findAllCompletedByContractorId(contractor.getId());
         assert jobExecutions.size() == 1;
 
@@ -156,7 +156,7 @@ public class JobLifecycleIT {
         JobExecution jobExecution = jobExecutionRepository.findByJobId(jobApplication.getJob().getId());
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.CANCELLED);
         assert jobExecutionRepository.findAllByContractorId(contractor.get().getId()).get(0).getStatus() == JobExecutionStatusEnum.CANCELLED;
-        Exception ex = assertThrows(InvalidStatusException.class,  () -> jobExecutionService.updateAvarageRating(jobExecution.getId(), 0));
+        Exception ex = assertThrows(InvalidStatusException.class,  () -> jobExecutionService.updateAverageRating(jobExecution.getId(), 0));
         assert ex.getMessage().equals("Job execution must be completed to update the average rating.");
         Exception ex2 = assertThrows(InvalidStatusException.class, () -> jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.IN_PROGRESS));
         assert ex2.getMessage().equals("Cannot change status from CANCELLED to another status.");
@@ -180,7 +180,7 @@ public class JobLifecycleIT {
         assert jobExecution.getContractorLeader().getId() == contractor1.getId();
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.IN_PROGRESS);
         jobExecutionService.updateStatus(jobExecution.getId(), JobExecutionStatusEnum.COMPLETED);
-        jobExecutionService.updateAvarageRating(jobExecution.getId(), 5);
+        jobExecutionService.updateAverageRating(jobExecution.getId(), 5);
         assert jobExecutionService.findAllCompletedByContractorId(contractor1.getId()).size() == 1;
         assert jobExecutionService.findAllCompletedByContractorId(contractor2.getId()).size() == 1;
         assert jobExecutionService.findJobExecutionByJobId(jobApplication1.getJob().getId()).getContractor().get(0).getEmail().equals("jhonDoe@gmail.com");

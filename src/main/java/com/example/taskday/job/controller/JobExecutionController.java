@@ -59,7 +59,7 @@ public class JobExecutionController {
         if(jobExecutionService.getClient(id).getId() != userDetails.getUserId()) {
             throw new InvalidPermissionException("Only the creator can perform action");
         }        
-        jobExecutionService.updateAvarageRating(id, rating);
+        jobExecutionService.updateAverageRating(id, rating);
         return ResponseEntity.ok("Job execution rating updated successfully");
     }
 

@@ -18,7 +18,8 @@ CREATE TABLE contractor (
     date_of_birth DATE NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(11) NOT NULL UNIQUE,
-    avarage_rating NUMERIC(3,2) NOT NULL DEFAULT 0.00, 
+    description TEXT,
+    average_rating NUMERIC(3,2) NOT NULL DEFAULT 0.00, 
     hash_password VARCHAR(255) NOT NULL,
     status_account BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,6 +68,7 @@ CREATE TABLE client_jobs (
     job_title VARCHAR(100) NOT NULL,
     job_description TEXT NOT NULL,
     job_salary NUMERIC(10,2) NOT NULL,
+    price_per_hour INTEGER NOT NULL,
     job_status job_status_enum NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -89,8 +91,12 @@ CREATE TABLE client_job_execution (
     id_job INT NOT NULL REFERENCES client_jobs(id_job) ON DELETE CASCADE ON UPDATE CASCADE,
     id_contractor INT NOT NULL REFERENCES contractor(id_contractor) ON DELETE CASCADE ON UPDATE CASCADE,
     status execution_status_enum NOT NULL DEFAULT 'pending',
-    avarage_rating_job NUMERIC(3,2) NOT NULL DEFAULT 0.00,
+    average_rating_job NUMERIC(3,2) NOT NULL DEFAULT 0.00,
     status_execution BOOLEAN NOT NULL DEFAULT FALSE,
+    in_progress_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    total_time INTEGER DEFAULT 0,
+    contractor_leader INT REFERENCES contractor(id_contractor) ON DELETE SET NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_job_execution UNIQUE (id_job) 
@@ -226,10 +232,10 @@ VALUES
 ('Ana', 'Costa', '555.666.777-88', '2222222222', '1992-07-10', 'ana@example.com', '11666666666', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKyVhXPqUe6KjQjQjQjQjQjQjQjQj', true);
 
 -- Insert sample jobs
-INSERT INTO client_jobs (id_client, job_title, job_description, job_salary, job_status) 
+INSERT INTO client_jobs (id_client, job_title, job_description, job_salary, price_per_hour, job_status) 
 VALUES 
-(1, 'Desenvolvimento de App Mobile', 'Preciso de um desenvolvedor para criar um aplicativo mobile em React Native', 5000.00, 'active'),
-(2, 'Design de Interface', 'Busco um designer para criar interfaces modernas para meu site', 3000.00, 'active');
+(1, 'Desenvolvimento de App Mobile', 'Preciso de um desenvolvedor para criar um aplicativo mobile em React Native', 5000.00, 50, 'active'),
+(2, 'Design de Interface', 'Busco um designer para criar interfaces modernas para meu site', 3000.00, 30, 'active');
 
 -- Insert sample addresses
 INSERT INTO address (street, number, neighborhood, city, state, zip_code, owner_type, id_client) 

@@ -109,12 +109,12 @@ public class JobExecutionService {
 
         jobExecution.setStatus(newStatus);
         switch (newStatus) {
-            case IN_PROGRESS -> jobExecution.setIn_progress_at(LocalDateTime.now());
+            case IN_PROGRESS -> jobExecution.setInProgressAt(LocalDateTime.now());
             case COMPLETED -> {
-                jobExecution.setCompleted_at(LocalDateTime.now());
+                jobExecution.setCompletedAt(LocalDateTime.now());
                 jobExecution.setStatusExecution(true);
-                if (jobExecution.getIn_progress_at() != null) {
-                    long seconds = java.time.Duration.between(jobExecution.getIn_progress_at(), jobExecution.getCompleted_at()).getSeconds();
+                if (jobExecution.getInProgressAt() != null) {
+                    long seconds = java.time.Duration.between(jobExecution.getInProgressAt(), jobExecution.getCompletedAt()).getSeconds();
                     jobExecution.setTotalTime(BigInteger.valueOf(seconds));
                 }}
             case CANCELLED -> {
@@ -136,7 +136,7 @@ public class JobExecutionService {
      * @param jobExecution the JobExecution to update
      * @param rating the new average rating to set
      */
-    public void updateAvarageRating(Long jobExecutionId, double rating) {
+    public void updateAverageRating(Long jobExecutionId, double rating) {
 
 
         
@@ -159,7 +159,7 @@ public class JobExecutionService {
 
         Rating newRating = new Rating(rating);
         for(Contractor contractor : contractors) {
-            contractorService.setAvarageRating(contractor.getId(), newRating);
+            contractorService.setAverageRating(contractor.getId(), newRating);
         }
         jobExecution.setRating(rating);
         jobExecutionRepository.save(jobExecution);

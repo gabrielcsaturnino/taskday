@@ -67,31 +67,72 @@ public class JobService {
 
     public void deleteJob(Long id) {
         Job job = findById(id);
-        job.setJobStatus(JobStatusEnum.INACTIVE);
+        job.setJobStatus(JobStatusEnum.inactive);
         jobRepository.save(job);
     }
 
     public void closeJob(Long id) {
         Job job = findById(id);
-        job.setJobStatus(JobStatusEnum.INACTIVE);
+        job.setJobStatus(JobStatusEnum.inactive);
         jobRepository.save(job);
     }
 
     public List<Job> searchJobs(JobSearchDTO searchDTO) {
         // Implementar busca com filtros
-        return jobRepository.findAll();
+        List<Job> allJobs = jobRepository.findAll();
+        
+        // Filtrar por título
+        if (searchDTO.title() != null && !searchDTO.title().isEmpty()) {
+            allJobs = allJobs.stream()
+                .filter(job -> job.getTitle().toLowerCase().contains(searchDTO.title().toLowerCase()))
+                .toList();
+        }
+        
+        // Filtrar por descrição
+        if (searchDTO.description() != null && !searchDTO.description().isEmpty()) {
+            allJobs = allJobs.stream()
+                .filter(job -> job.getDescription().toLowerCase().contains(searchDTO.description().toLowerCase()))
+                .toList();
+        }
+        
+        // Filtrar por preço mínimo
+        if (searchDTO.minPrice() != null) {
+            allJobs = allJobs.stream()
+                .filter(job -> job.getPricePerHour() >= searchDTO.minPrice())
+                .toList();
+        }
+        
+        // Filtrar por preço máximo
+        if (searchDTO.maxPrice() != null) {
+            allJobs = allJobs.stream()
+                .filter(job -> job.getPricePerHour() <= searchDTO.maxPrice())
+                .toList();
+        }
+        
+        return allJobs;
     }
 
     public List<Job> findJobsByLocation(String location) {
-        return jobRepository.findAll();
+        return jobRepository.findAll().stream()
+            .filter(job -> job.getAddress() != null && 
+                job.getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+            .toList();
     }
 
     public List<Job> findJobsByPriceRange(Integer minPrice, Integer maxPrice) {
-        return jobRepository.findAll();
+        return jobRepository.findAll().stream()
+            .filter(job -> {
+                if (minPrice != null && job.getPricePerHour() < minPrice) return false;
+                if (maxPrice != null && job.getPricePerHour() > maxPrice) return false;
+                return true;
+            })
+            .toList();
     }
 
     public List<Job> findActiveJobs() {
-        return jobRepository.findAll();
+        return jobRepository.findAll().stream()
+            .filter(job -> job.getJobStatus() == JobStatusEnum.active)
+            .toList();
     }
 
 }

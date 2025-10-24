@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.example.taskday.job.Job;
 import com.example.taskday.user.Client;
 import com.example.taskday.user.Contractor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ enum AddressOwnerType {
 
 @Entity
 @Table(name = "address")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address {
 
     @Id
@@ -147,6 +149,30 @@ public class Address {
 
     public Contractor getContractor() {
         return contractor;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getZipCode() {
+        return zipCode;
     }
 
 }

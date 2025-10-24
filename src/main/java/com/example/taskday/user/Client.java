@@ -10,6 +10,7 @@ import com.example.taskday.auxiliary.Password;
 import com.example.taskday.auxiliary.Phone;
 import com.example.taskday.exception.NullValueException;
 import com.example.taskday.job.Job;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,6 +23,7 @@ import jakarta.persistence.Table;
 
 @Table(name = "client")
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Client extends User{
     
     @Id

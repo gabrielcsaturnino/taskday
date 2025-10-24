@@ -21,13 +21,26 @@ public class SearchController {
     }
     
     @GetMapping("/jobs")
-    public ResponseEntity<List<Job>> searchJobs(JobSearchDTO searchDTO) {
+    public ResponseEntity<List<Job>> searchJobs(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(required = false) String location) {
+        
+        JobSearchDTO searchDTO = new JobSearchDTO(title, description, minPrice, maxPrice, location, null, 0, 10, "createdAt", "desc");
         List<Job> jobs = searchService.searchJobs(searchDTO);
         return ResponseEntity.ok(jobs);
     }
     
     @GetMapping("/contractors")
-    public ResponseEntity<List<Contractor>> searchContractors(ContractorSearchDTO searchDTO) {
+    public ResponseEntity<List<Contractor>> searchContractors(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxRating) {
+        
+        ContractorSearchDTO searchDTO = new ContractorSearchDTO(name, location, minRating, maxRating, null, 0, 10, "createdAt", "desc");
         List<Contractor> contractors = searchService.searchContractors(searchDTO);
         return ResponseEntity.ok(contractors);
     }
