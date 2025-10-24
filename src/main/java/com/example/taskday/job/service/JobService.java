@@ -84,14 +84,14 @@ public class JobService {
         // Filtrar por título
         if (searchDTO.title() != null && !searchDTO.title().isEmpty()) {
             allJobs = allJobs.stream()
-                .filter(job -> job.getTitle().toLowerCase().contains(searchDTO.title().toLowerCase()))
+                .filter(job -> job.getTitle().toLowerCase(Locale.US).contains(searchDTO.title().toLowerCase(Locale.US)))
                 .toList();
         }
         
         // Filtrar por descrição
         if (searchDTO.description() != null && !searchDTO.description().isEmpty()) {
             allJobs = allJobs.stream()
-                .filter(job -> job.getDescription().toLowerCase().contains(searchDTO.description().toLowerCase()))
+                .filter(job -> job.getDescription().toLowerCase(Locale.US).contains(searchDTO.description().toLowerCase(Locale.US)))
                 .toList();
         }
         
@@ -115,7 +115,7 @@ public class JobService {
     public List<Job> findJobsByLocation(String location) {
         return jobRepository.findAll().stream()
             .filter(job -> job.getAddress() != null && 
-                job.getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+                job.getAddress().getCity().toLowerCase(Locale.US).contains(location.toLowerCase(Locale.US)))
             .toList();
     }
 
