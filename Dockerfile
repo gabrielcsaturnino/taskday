@@ -15,7 +15,7 @@ COPY spotbugs-exclude.xml .
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM openjdk:17-alpine
+FROM openjdk:18-alpine
 WORKDIR /app
 
 # Criar usuário não-root para segurança
