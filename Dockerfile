@@ -1,5 +1,5 @@
 # Multi-stage build para otimização
-FROM maven:3-openjdk-17 AS builder
+FROM maven:3-openjdk-18 AS builder
 
 WORKDIR /app
 COPY pom.xml .
