@@ -1,4 +1,4 @@
-# 🚀 CI/CD Pipeline - TaskDay
+# 🚀 CI/CD Pipeline - Jooby
 
 ## 📋 **Resumo do que foi configurado**
 
@@ -31,13 +31,13 @@ git config --global user.name "Seu Nome"
 git config --global user.email "seu.email@exemplo.com"
 
 # 2. Inicializar repositório
-cd /home/gabriel/Documentos/taskday
+cd /home/gabriel/Documentos/jooby
 git init
 git add .
 git commit -m "feat: configuração inicial com CI/CD"
 
 # 3. Criar repositório no GitHub e conectar
-git remote add origin https://github.com/SEU-USUARIO/taskday.git
+git remote add origin https://github.com/SEU-USUARIO/jooby.git
 git push -u origin main
 ```
 
@@ -203,7 +203,7 @@ docker-compose up -d --build
 docker-compose logs postgres
 
 # Conectar ao banco
-docker-compose exec postgres psql -U gabriel -d taskdaydb
+docker-compose exec postgres psql -U gabriel -d joobydb
 ```
 
 ---
@@ -241,4 +241,4 @@ docker-compose exec postgres psql -U gabriel -d taskdaydb
 
 ---
 
-*Pipeline CI/CD configurado em 21/10/2025 - TaskDay*
+*Pipeline CI/CD configurado em 19/12/2024 - Jooby*

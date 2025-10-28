@@ -1,23 +1,23 @@
-# TaskDay - Docker Setup
+# Jooby - Docker Setup
 
-Este documento explica como configurar e executar o TaskDay usando Docker.
+Este documento explica como configurar e executar o Jooby usando Docker.
 
 ## 🐳 Serviços Incluídos
 
 ### 1. PostgreSQL Database
 - **Imagem**: postgres:15-alpine
 - **Porta**: 5432
-- **Database**: taskdaydb
+- **Database**: joobydb
 - **Usuário**: gabriel
 - **Senha**: 123
 
 ### 2. pgAdmin
 - **Imagem**: dpage/pgadmin4:latest
 - **Porta**: 8081
-- **Email**: admin@taskday.com
+- **Email**: admin@jooby.com
 - **Senha**: admin123
 
-### 3. TaskDay Application (Opcional)
+### 3. Jooby Application (Opcional)
 - **Porta**: 8080
 - **Build**: Dockerfile personalizado
 
@@ -58,29 +58,29 @@ docker-compose up postgres pgadmin -d
 ### PostgreSQL
 ```bash
 # Conectar via psql
-docker exec -it taskday-postgres psql -U gabriel -d taskdaydb
+docker exec -it jooby-postgres psql -U gabriel -d joobydb
 
 # Ou via cliente externo
 Host: localhost
 Port: 5432
-Database: taskdaydb
+Database: joobydb
 Username: gabriel
 Password: 123
 ```
 
 ### pgAdmin
 1. Acesse: http://localhost:8081
-2. Login: admin@taskday.com
+2. Login: admin@jooby.com
 3. Senha: admin123
 4. Adicionar servidor:
-   - **Nome**: TaskDay DB
+   - **Nome**: Jooby DB
    - **Host**: postgres
    - **Port**: 5432
-   - **Database**: taskdaydb
+   - **Database**: joobydb
    - **Username**: gabriel
    - **Password**: 123
 
-### TaskDay API (se rodando via Docker)
+### Jooby API (se rodando via Docker)
 - **API**: http://localhost:8080
 - **Swagger**: http://localhost:8080/swagger-ui.html
 - **Health Check**: http://localhost:8080/actuator/health
@@ -97,19 +97,19 @@ docker-compose down -v
 
 # Ver logs
 docker-compose logs -f postgres
-docker-compose logs -f taskday-app
+docker-compose logs -f jooby-app
 
 # Rebuild da aplicação
-docker-compose build taskday-app
+docker-compose build jooby-app
 ```
 
 ### Backup e Restore
 ```bash
 # Backup do banco
-docker exec taskday-postgres pg_dump -U gabriel taskdaydb > backup.sql
+docker exec jooby-postgres pg_dump -U gabriel joobydb > backup.sql
 
 # Restore do banco
-docker exec -i taskday-postgres psql -U gabriel taskdaydb < backup.sql
+docker exec -i jooby-postgres psql -U gabriel joobydb < backup.sql
 ```
 
 ### Limpar Dados
@@ -125,7 +125,7 @@ docker rmi $(docker images -q)
 ## 📁 Estrutura de Arquivos
 
 ```
-taskday/
+jooby/
 ├── docker-compose.yml              # Configuração principal
 ├── docker-compose.override.yml     # Override para desenvolvimento
 ├── Dockerfile                      # Build da aplicação
@@ -186,7 +186,7 @@ docker-compose ps postgres
 docker-compose logs postgres
 
 # Testar conexão
-docker exec taskday-postgres pg_isready -U gabriel
+docker exec jooby-postgres pg_isready -U gabriel
 ```
 
 ## 📈 Monitoramento
@@ -197,7 +197,7 @@ docker exec taskday-postgres pg_isready -U gabriel
 docker-compose ps
 
 # Verificar health do PostgreSQL
-docker exec taskday-postgres pg_isready -U gabriel -d taskdaydb
+docker exec jooby-postgres pg_isready -U gabriel -d joobydb
 ```
 
 ### Logs em Tempo Real
@@ -229,5 +229,5 @@ services:
 
 ---
 
-**TaskDay Docker Setup** - Desenvolvido com ❤️ para facilitar o desenvolvimento!
+**Jooby Docker Setup** - Desenvolvido com ❤️ para facilitar o desenvolvimento!
 

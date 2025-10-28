@@ -1,328 +1,164 @@
-# TaskDay - Plataforma de Freelancers
+# Jooby - Plataforma de Freelancers
 
-Uma plataforma completa para conectar clientes e freelancers, desenvolvida com Spring Boot e React Native.
+Uma plataforma completa para conectar clientes e freelancers, desenvolvida com Spring Boot, React Web e React Native.
 
-## 📱 **Arquitetura Completa**
+## 🚀 Início Rápido
 
-### **🔧 Backend (Spring Boot)**
-- API REST completa
-- Autenticação JWT
-- Banco PostgreSQL
-- Cache Redis
-- Documentação Swagger
+### Pré-requisitos
+- Java 17+
+- Node.js 18+
+- Docker & Docker Compose
+- PostgreSQL (ou use Docker)
 
-### **📱 Frontend Mobile (React Native + TypeScript)**
-- App nativo para iOS e Android
-- Integração completa com backend
-- Interface moderna e responsiva
-- Navegação fluida
+### Setup Completo
+```bash
+# 1. Clone o repositório
+git clone <repository-url>
+cd jooby
 
-### **🐳 Infraestrutura**
-- Docker para desenvolvimento e produção
-- CI/CD automatizado
-- Monitoramento e logs
-- Deploy seguro
+# 2. Setup inicial (instala dependências e configura ambiente)
+./scripts/setup.sh init
 
-## 🚀 Funcionalidades Implementadas
+# 3. Iniciar todo o ecossistema
+./scripts/start-all.sh
+```
 
-### ✅ **Melhorias de Infraestrutura**
-- **Spring Boot 3.2.0** (atualizado da versão 4.0.0-SNAPSHOT)
-- **Dependências atualizadas** e organizadas
-- **Flyway habilitado** para migrações de banco
-- **Cache configurado** com Spring Cache
-- **OpenAPI/Swagger** para documentação da API
-- **Actuator** para monitoramento
-- **Configuração de email** para notificações
-- **Upload de arquivos** configurado
+### URLs de Acesso
+- **Frontend Web**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **pgAdmin**: http://localhost:8081
 
-### ✅ **Segurança Melhorada**
-- **JWT com expiração** configurada
-- **Endpoints públicos** bem definidos
-- **Autorização por recurso** implementada
-- **Configuração de CORS** adequada
+## 🛠️ Desenvolvimento
 
-### ✅ **Entidades e DTOs**
-- **Enums separados** em arquivos próprios
-- **DTOs de Response, Update e Search** criados
-- **Validações melhoradas** com Caelum Stella para CPF
-- **Campos de auditoria** (created_at, updated_at)
+### Backend (Spring Boot)
+```bash
+# Executar apenas o backend
+./mvnw spring-boot:run
 
-### ✅ **Services Aprimorados**
+# Executar testes
+./mvnw test
 
-#### **ClientService**
-- ✅ `updateClient()` - Atualizar perfil do cliente
-- ✅ `changePassword()` - Alterar senha
-- ✅ `deactivateAccount()` / `activateAccount()` - Gerenciar conta
-- ✅ `findById()` - Buscar cliente por ID
-- ✅ Validações de unicidade de email/telefone
+# Build
+./mvnw clean package
+```
 
-#### **ContractorService**
-- ✅ `updateContractor()` - Atualizar perfil do contratante
-- ✅ `changePassword()` - Alterar senha
-- ✅ `deactivateAccount()` / `activateAccount()` - Gerenciar conta
-- ✅ `searchContractors()` - Buscar contratantes
-- ✅ Cache implementado com `@Cacheable` e `@CacheEvict`
+### Frontend Web (React)
+```bash
+# Executar apenas o frontend web
+./scripts/dev-web.sh
 
-#### **JobService**
-- ✅ `updateJob()` - Atualizar job
-- ✅ `deleteJob()` - Deletar job (soft delete)
-- ✅ `closeJob()` - Fechar job
-- ✅ `searchJobs()` - Buscar jobs com filtros
-- ✅ `findJobsByLocation()` - Buscar por localização
-- ✅ `findJobsByPriceRange()` - Buscar por faixa de preço
+# Ou manualmente
+cd jooby-web
+npm install
+npm start
+```
 
-#### **MessageService**
-- ✅ `markAsRead()` - Marcar mensagens como lidas
-- ✅ `findUnreadMessages()` - Buscar mensagens não lidas
-- ✅ `deleteMessage()` - Deletar mensagem
+### Mobile (React Native)
+```bash
+# Setup inicial do mobile
+./scripts/mobile-dev.sh setup
 
-### ✅ **Controllers Completos**
+# Iniciar ambiente mobile
+./scripts/mobile-dev.sh start
 
-#### **ClientController**
-- ✅ `GET /api/v1/clients/{id}` - Buscar cliente por ID
-- ✅ `PUT /api/v1/clients/profile` - Atualizar perfil
-- ✅ `PUT /api/v1/clients/password` - Alterar senha
-- ✅ `PUT /api/v1/clients/{id}/deactivate` - Desativar conta
-- ✅ `PUT /api/v1/clients/{id}/activate` - Ativar conta
+# Executar no Android
+./scripts/mobile-dev.sh android
 
-#### **ContractorController**
-- ✅ `GET /api/v1/contractors/{id}` - Buscar contratante por ID
-- ✅ `GET /api/v1/contractors/search` - Buscar contratantes
-- ✅ `PUT /api/v1/contractors/profile` - Atualizar perfil
-- ✅ `PUT /api/v1/contractors/password` - Alterar senha
-- ✅ `PUT /api/v1/contractors/{id}/deactivate` - Desativar conta
-- ✅ `PUT /api/v1/contractors/{id}/activate` - Ativar conta
+# Executar no iOS
+./scripts/mobile-dev.sh ios
+```
 
-#### **JobController**
-- ✅ `PUT /api/v1/jobs/{id}` - Atualizar job
-- ✅ `DELETE /api/v1/jobs/{id}` - Deletar job
-- ✅ `PUT /api/v1/jobs/{id}/close` - Fechar job
-- ✅ `GET /api/v1/jobs/search` - Buscar jobs
-- ✅ `GET /api/v1/jobs/active` - Jobs ativos
+## 🐳 Docker
 
-### ✅ **Novos Services e Controllers**
+### Desenvolvimento Completo
+```bash
+# Iniciar todos os serviços
+docker-compose up -d
 
-#### **SearchService & SearchController**
-- ✅ Busca avançada de jobs
-- ✅ Busca avançada de contratantes
-- ✅ Filtros por localização, preço, rating
+# Verificar status
+docker-compose ps
 
-#### **NotificationService**
-- ✅ Envio de emails
-- ✅ Notificações de candidatura
-- ✅ Notificações de aceitação/rejeição
+# Parar serviços
+docker-compose down
+```
 
-#### **FileService & FileController**
-- ✅ Upload de arquivos
-- ✅ Download de arquivos
-- ✅ Exclusão de arquivos
+### Apenas Mobile
+```bash
+# Ambiente mobile completo
+docker-compose -f docker-compose.mobile.yml up -d
+```
 
-#### **MetricsController**
-- ✅ Métricas do dashboard
-- ✅ Estatísticas de aplicações
-- ✅ Métricas de jobs ativos
+## 📊 Banco de Dados
 
-### ✅ **Testes Implementados**
-- ✅ **ClientServiceTest** - Testes unitários do ClientService
-- ✅ **JobApplicationIT** - Testes de integração de candidaturas
-- ✅ **Testes existentes** mantidos e melhorados
+O banco PostgreSQL é inicializado automaticamente com:
+- Schema completo criado via Flyway migrations
+- Dados de exemplo para testes
+- Triggers para timestamps automáticos
 
-### ✅ **Configurações Avançadas**
-- ✅ **CacheConfig** - Configuração de cache
-- ✅ **OpenApiConfig** - Documentação da API
-- ✅ **Application.properties** - Configurações completas
-- ✅ **Logging** configurado adequadamente
-
-## 🛠️ Tecnologias Utilizadas
-
-- **Spring Boot 3.2.0**
-- **Spring Security** com JWT
-- **Spring Data JPA**
-- **PostgreSQL**
-- **Flyway** para migrações
-- **Spring Cache**
-- **Spring Mail**
-- **OpenAPI/Swagger**
-- **Caelum Stella** para validação de CPF
-- **JUnit 5** para testes
-- **Mockito** para mocks
-
-## 📋 Endpoints da API
-
-### **Autenticação**
-- `POST /authenticate` - Login
-
-### **Clientes**
-- `POST /api/v1/clients` - Criar cliente
-- `GET /api/v1/clients/profile` - Perfil do cliente logado
-- `GET /api/v1/clients/{id}` - Buscar cliente por ID
-- `PUT /api/v1/clients/profile` - Atualizar perfil
-- `PUT /api/v1/clients/password` - Alterar senha
-- `PUT /api/v1/clients/{id}/deactivate` - Desativar conta
-- `PUT /api/v1/clients/{id}/activate` - Ativar conta
-
-### **Contratantes**
-- `POST /api/v1/contractors` - Criar contratante
-- `GET /api/v1/contractors/profile` - Perfil do contratante logado
-- `GET /api/v1/contractors/{id}` - Buscar contratante por ID
-- `GET /api/v1/contractors/search` - Buscar contratantes
-- `PUT /api/v1/contractors/profile` - Atualizar perfil
-- `PUT /api/v1/contractors/password` - Alterar senha
-- `PUT /api/v1/contractors/{id}/deactivate` - Desativar conta
-- `PUT /api/v1/contractors/{id}/activate` - Ativar conta
-
-### **Jobs**
-- `POST /api/v1/jobs` - Criar job
-- `GET /api/v1/jobs/{id}` - Buscar job por ID
-- `GET /api/v1/jobs/client/{clientId}` - Jobs de um cliente
-- `GET /api/v1/jobs/my-jobs` - Meus jobs
-- `GET /api/v1/jobs/search` - Buscar jobs
-- `GET /api/v1/jobs/active` - Jobs ativos
-- `PUT /api/v1/jobs/{id}` - Atualizar job
-- `DELETE /api/v1/jobs/{id}` - Deletar job
-- `PUT /api/v1/jobs/{id}/close` - Fechar job
-
-### **Candidaturas**
-- `POST /api/v1/job-applications/apply/{jobId}` - Candidatar-se
-- `GET /api/v1/job-applications/{id}` - Buscar candidatura
-- `PUT /api/v1/job-applications/{id}/status` - Atualizar status
-
-### **Chat**
-- `GET /api/v1/chat-rooms/{id}` - Buscar chat room
-- `GET /api/v1/chat-rooms/{id}/messages` - Mensagens do chat
-- `PUT /api/v1/chat-rooms/{id}/status` - Atualizar status
-- `GET /api/v1/chat-rooms/my-chats` - Meus chats
-
-### **Busca**
-- `GET /api/v1/search/jobs` - Buscar jobs
-- `GET /api/v1/search/contractors` - Buscar contratantes
-
-### **Arquivos**
-- `POST /api/v1/files/upload` - Upload de arquivo
-- `GET /api/v1/files/{filename}` - Download de arquivo
-- `DELETE /api/v1/files/{filename}` - Deletar arquivo
-
-### **Métricas**
-- `GET /api/v1/metrics/dashboard` - Métricas do dashboard
-- `GET /api/v1/metrics/jobs/active` - Métricas de jobs ativos
-
-## 🚀 Como Executar
-
-### **🔧 Backend (Spring Boot)**
-
-1. **Configurar PostgreSQL**
-   ```bash
-   # Criar banco de dados
-   createdb taskdaydb
-   ```
-
-2. **Configurar variáveis de ambiente**
-   ```bash
-   export MAIL_USERNAME=seu-email@gmail.com
-   export MAIL_PASSWORD=sua-senha-app
-   ```
-
-3. **Executar a aplicação**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-4. **Acessar a documentação**
-   - Swagger UI: http://localhost:8080/swagger-ui.html
-   - API Docs: http://localhost:8080/api-docs
-
-### **📱 Frontend Mobile (React Native)**
-
-1. **Setup inicial**
-   ```bash
-   ./scripts/mobile-dev.sh setup
-   ```
-
-2. **Iniciar ambiente de desenvolvimento**
-   ```bash
-   ./scripts/mobile-dev.sh start
-   ```
-
-3. **Executar no dispositivo**
-   ```bash
-   # Android
-   ./scripts/mobile-dev.sh android
-   
-   # iOS
-   ./scripts/mobile-dev.sh ios
-   ```
-
-### **🐳 Docker (Desenvolvimento Completo)**
-
-1. **Iniciar ambiente completo**
-   ```bash
-   docker-compose -f docker-compose.mobile.yml up -d
-   ```
-
-2. **Verificar serviços**
-   ```bash
-   docker-compose -f docker-compose.mobile.yml ps
-   ```
-
-3. **Acessar aplicações**
-   - Backend: http://localhost:8080
-   - pgAdmin: http://localhost:8081
-   - Mobile: Metro bundler na porta 8081
-
-## 📊 Monitoramento
-
-- **Health Check**: http://localhost:8080/actuator/health
-- **Métricas**: http://localhost:8080/actuator/metrics
-- **Info**: http://localhost:8080/actuator/info
+### Reset do Banco
+```bash
+# Parar e remover volumes (CUIDADO: apaga dados!)
+docker-compose down -v
+docker-compose up postgres -d
+```
 
 ## 🧪 Testes
 
 ```bash
-# Executar todos os testes
+# Todos os testes
 ./mvnw test
 
-# Executar testes de integração
+# Testes de integração
 ./mvnw test -Dtest=*IT
 
-# Executar testes unitários
+# Testes unitários
 ./mvnw test -Dtest=*Test
 ```
 
-## 📈 Melhorias Implementadas
+## 📱 Tecnologias
 
-### **Performance**
-- ✅ Cache implementado nos services
-- ✅ Queries otimizadas
-- ✅ Paginação preparada
+### Backend
+- Spring Boot 3.2.0
+- Spring Security + JWT
+- PostgreSQL + Flyway
+- Docker
 
-### **Segurança**
-- ✅ JWT com expiração
-- ✅ Validações robustas
-- ✅ Autorização por recurso
+### Frontend Web
+- React 19 + TypeScript
+- Styled Components
+- React Router
 
-### **Manutenibilidade**
-- ✅ Código bem estruturado
-- ✅ DTOs separados
-- ✅ Enums organizados
-- ✅ Testes abrangentes
+### Mobile
+- React Native + TypeScript
+- Metro Bundler
 
-### **Funcionalidades**
-- ✅ CRUD completo
-- ✅ Busca avançada
-- ✅ Notificações por email
-- ✅ Upload de arquivos
-- ✅ Métricas e dashboard
+## 🔧 Scripts Úteis
 
-## 🎯 Próximos Passos Sugeridos
+```bash
+# Criar nova feature
+./scripts/create-feature.sh nome-da-feature
 
-1. **Implementar paginação** nos endpoints de listagem
-2. **Adicionar filtros avançados** nas buscas
-3. **Implementar sistema de avaliações**
-4. **Adicionar geolocalização** para jobs
-5. **Implementar sistema de pagamentos**
-6. **Adicionar notificações push**
-7. **Implementar relatórios avançados**
+# Criar bugfix
+./scripts/create-bugfix.sh nome-do-bugfix
+
+# Gerenciar banco de dados
+./scripts/init-db.sh status
+./scripts/init-db.sh reset
+
+# Deploy
+./scripts/deploy.sh
+
+# Teste de integração
+./scripts/test-integration.sh
+```
+
+## 📚 Documentação Adicional
+
+- [Configuração Docker](README-Docker.md)
+- [CI/CD](README-CICD.md)
+- [Workflow Git](GIT-WORKFLOW.md)
 
 ---
 
-**TaskDay** - Conectando talentos e oportunidades! 🚀
+**Jooby** - Conectando talentos e oportunidades! 🚀

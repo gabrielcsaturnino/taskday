@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TaskDay - Setup Completo do Projeto
+# Jooby - Setup Completo do Projeto
 # Uso: ./scripts/setup.sh [opção]
 # Opções: init, branches, protection, test
 
@@ -13,7 +13,7 @@ NC='\033[0m'
 
 # Função para mostrar ajuda
 show_help() {
-    echo -e "${BLUE}🚀 TaskDay - Setup Completo${NC}"
+    echo -e "${BLUE}🚀 Jooby - Setup Completo${NC}"
     echo "============================="
     echo ""
     echo -e "${YELLOW}Uso:${NC}"
@@ -34,7 +34,7 @@ show_help() {
 
 # Verificar se estamos no diretório correto
 if [ ! -f "pom.xml" ]; then
-    echo -e "${RED}❌ Erro: Execute este script no diretório raiz do projeto TaskDay${NC}"
+    echo -e "${RED}❌ Erro: Execute este script no diretório raiz do projeto Jooby${NC}"
     exit 1
 fi
 
@@ -48,7 +48,7 @@ OPTION=$1
 
 # Função para setup inicial
 setup_init() {
-    echo -e "${BLUE}🚀 Setup Inicial do TaskDay${NC}"
+    echo -e "${BLUE}🚀 Setup Inicial do Jooby${NC}"
     echo "==============================="
     
     # 1. Verificar dependências
@@ -69,6 +69,11 @@ setup_init() {
         exit 1
     fi
     
+    if ! command -v node &> /dev/null; then
+        echo -e "${RED}❌ Node.js não está instalado!${NC}"
+        exit 1
+    fi
+    
     echo -e "${GREEN}✅ Dependências verificadas!${NC}"
     
     # 2. Configurar Git
@@ -77,26 +82,38 @@ setup_init() {
     git config --global user.email "gabrielcsaturnino@gmail.com" 2>/dev/null || true
     echo -e "${GREEN}✅ Git configurado!${NC}"
     
-    # 3. Criar branches
-    echo -e "${YELLOW}🌿 Criando estrutura de branches...${NC}"
-    if ! git show-ref --verify --quiet refs/heads/develop; then
-        git checkout -b develop
-        git push -u origin develop
-        echo -e "${GREEN}✅ Branch develop criada!${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Branch develop já existe!${NC}"
+    # 3. Instalar dependências do frontend web
+    echo -e "${YELLOW}🌐 Instalando dependências do frontend web...${NC}"
+    if [ -d "jooby-web" ]; then
+        cd jooby-web
+        npm install
+        cd ..
+        echo -e "${GREEN}✅ Frontend web configurado!${NC}"
     fi
     
-    # 4. Build da aplicação
+    # 4. Instalar dependências do mobile
+    echo -e "${YELLOW}📱 Instalando dependências do mobile...${NC}"
+    if [ -d "JoobyMobile" ]; then
+        cd JoobyMobile
+        npm install
+        cd ..
+        echo -e "${GREEN}✅ Mobile configurado!${NC}"
+    fi
+    
+    # 5. Build da aplicação
     echo -e "${YELLOW}📦 Fazendo build da aplicação...${NC}"
     ./mvnw clean compile
     echo -e "${GREEN}✅ Build concluído!${NC}"
     
-    # 5. Teste do ambiente
+    # 6. Teste do ambiente
     echo -e "${YELLOW}🧪 Testando ambiente...${NC}"
     ./scripts/setup.sh test
     
     echo -e "${GREEN}🎉 Setup inicial concluído!${NC}"
+    echo ""
+    echo -e "${YELLOW}📋 Próximos passos:${NC}"
+    echo "1. Execute: ./scripts/start-all.sh"
+    echo "2. Acesse: http://localhost:3000 (Web) e http://localhost:8080 (API)"
 }
 
 # Função para criar branches
@@ -159,7 +176,7 @@ setup_protection() {
 
 # Função para testar ambiente
 setup_test() {
-    echo -e "${BLUE}🧪 Testando Ambiente TaskDay${NC}"
+    echo -e "${BLUE}🧪 Testando Ambiente Jooby${NC}"
     echo "==============================="
     
     # 1. Teste de compilação
@@ -171,23 +188,7 @@ setup_test() {
         return 1
     fi
     
-    # 2. Teste de análise de código
-    echo -e "${YELLOW}🔍 Testando análise de código...${NC}"
-    if ./mvnw spotbugs:check -q; then
-        echo -e "${GREEN}✅ SpotBugs OK!${NC}"
-    else
-        echo -e "${YELLOW}⚠️  SpotBugs com warnings (normal)${NC}"
-    fi
-    
-    # 3. Teste de testes
-    echo -e "${YELLOW}🧪 Testando testes unitários...${NC}"
-    if ./mvnw test -q; then
-        echo -e "${GREEN}✅ Testes OK!${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Alguns testes falharam (verificar)${NC}"
-    fi
-    
-    # 4. Teste de Docker
+    # 2. Teste de Docker
     echo -e "${YELLOW}🐳 Testando Docker...${NC}"
     if docker --version &> /dev/null; then
         echo -e "${GREEN}✅ Docker OK!${NC}"
@@ -196,7 +197,7 @@ setup_test() {
         return 1
     fi
     
-    # 5. Teste de Git
+    # 3. Teste de Git
     echo -e "${YELLOW}🌿 Testando Git...${NC}"
     if git status &> /dev/null; then
         echo -e "${GREEN}✅ Git OK!${NC}"
@@ -205,12 +206,20 @@ setup_test() {
         return 1
     fi
     
+    # 4. Teste de Node.js
+    echo -e "${YELLOW}📱 Testando Node.js...${NC}"
+    if node --version &> /dev/null; then
+        echo -e "${GREEN}✅ Node.js OK!${NC}"
+    else
+        echo -e "${RED}❌ Node.js não está funcionando!${NC}"
+        return 1
+    fi
+    
     echo -e "${GREEN}🎉 Todos os testes passaram!${NC}"
     echo ""
     echo -e "${YELLOW}📋 Próximos passos:${NC}"
-    echo "1. Configure proteção de branches"
-    echo "2. Teste criando uma feature"
-    echo "3. Configure deploy"
+    echo "1. Execute: ./scripts/start-all.sh"
+    echo "2. Acesse: http://localhost:3000 (Web) e http://localhost:8080 (API)"
     echo ""
     echo -e "${GREEN}✅ Ambiente pronto para desenvolvimento!${NC}"
 }

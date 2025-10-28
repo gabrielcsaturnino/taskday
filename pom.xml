@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>taskday</artifactId>
+	<artifactId>jooby</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>taskday</name>
-	<description>Demo project for Spring Boot</description>
+	<name>jooby</name>
+	<description>Jooby - Plataforma de Freelancers</description>
 	<url/>
 	<licenses>
 		<license/>

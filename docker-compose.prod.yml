@@ -5,13 +5,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: taskday-app
+    container_name: jooby-app
     restart: unless-stopped
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/taskdaydb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/joobydb
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
@@ -21,7 +21,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - taskday-network
+      - jooby-network
     volumes:
       - app-logs:/app/logs
     healthcheck:
@@ -33,10 +33,10 @@ services:
 
   postgres:
     image: postgres:15-alpine
-    container_name: taskday-postgres
+    container_name: jooby-postgres
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=taskdaydb
+      - POSTGRES_DB=joobydb
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
@@ -45,16 +45,16 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
     networks:
-      - taskday-network
+      - jooby-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d taskdaydb"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d joobydb"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: taskday-pgadmin
+    container_name: jooby-pgadmin
     restart: unless-stopped
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
@@ -66,11 +66,11 @@ services:
     depends_on:
       - postgres
     networks:
-      - taskday-network
+      - jooby-network
 
   nginx:
     image: nginx:alpine
-    container_name: taskday-nginx
+    container_name: jooby-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -82,18 +82,18 @@ services:
     depends_on:
       - app
     networks:
-      - taskday-network
+      - jooby-network
 
   redis:
     image: redis:7-alpine
-    container_name: taskday-redis
+    container_name: jooby-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
-      - taskday-network
+      - jooby-network
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
 
 volumes:
@@ -104,5 +104,5 @@ volumes:
   redis-data:
 
 networks:
-  taskday-network:
+  jooby-network:
     driver: bridge

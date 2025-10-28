@@ -1,4 +1,4 @@
--- TaskDay Database Initialization Script
+-- Jooby Database Initialization Script
 -- This script creates the complete database schema based on all Flyway migrations
 
 -- Create custom types
@@ -248,5 +248,5 @@ VALUES
 ('Rua Augusta', '789', 'Consolação', 'São Paulo', 'SP', '01305-100', 'CONTRACTOR', 1),
 ('Rua Oscar Freire', '321', 'Jardins', 'São Paulo', 'SP', '01426-001', 'CONTRACTOR', 2);
 
-COMMENT ON DATABASE taskdaydb IS 'TaskDay - Plataforma de Freelancers Database';
+COMMENT ON DATABASE joobydb IS 'Jooby - Plataforma de Freelancers Database';
 

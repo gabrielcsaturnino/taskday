@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TaskDay - Script para Desenvolvimento Mobile
+# Jooby - Script para Desenvolvimento Mobile
 # Uso: ./scripts/mobile-dev.sh [opção]
 # Opções: setup, start, stop, build, test, clean
 
@@ -13,7 +13,7 @@ NC='\033[0m'
 
 # Função para mostrar ajuda
 show_help() {
-    echo -e "${BLUE}📱 TaskDay - Desenvolvimento Mobile${NC}"
+    echo -e "${BLUE}📱 Jooby - Desenvolvimento Mobile${NC}"
     echo "====================================="
     echo ""
     echo -e "${YELLOW}Uso:${NC}"
@@ -38,7 +38,7 @@ show_help() {
 
 # Verificar se estamos no diretório correto
 if [ ! -f "pom.xml" ]; then
-    echo -e "${RED}❌ Erro: Execute este script no diretório raiz do projeto TaskDay${NC}"
+    echo -e "${RED}❌ Erro: Execute este script no diretório raiz do projeto Jooby${NC}"
     exit 1
 fi
 
@@ -78,7 +78,7 @@ setup_mobile() {
     
     # 2. Instalar dependências do mobile
     echo -e "${YELLOW}📦 Instalando dependências do mobile...${NC}"
-    cd mobile
+    cd JoobyMobile
     npm install
     cd ..
     echo -e "${GREEN}✅ Dependências instaladas!${NC}"
@@ -87,8 +87,8 @@ setup_mobile() {
     echo -e "${YELLOW}⚙️  Configurando ambiente...${NC}"
     
     # Criar arquivo de configuração
-    cat > mobile/.env << EOF
-# TaskDay Mobile - Configurações de Ambiente
+    cat > JoobyMobile/.env << EOF
+# Jooby Mobile - Configurações de Ambiente
 API_BASE_URL=http://10.0.2.2:8080/api/v1
 API_TIMEOUT=10000
 DEBUG_MODE=true
@@ -130,7 +130,7 @@ start_mobile() {
     
     # 3. Iniciar Metro bundler
     echo -e "${YELLOW}📱 Iniciando Metro bundler...${NC}"
-    cd mobile
+    cd JoobyMobile
     npm start &
     cd ..
     
@@ -166,7 +166,7 @@ build_mobile() {
     echo -e "${BLUE}📦 Build do App Mobile${NC}"
     echo "========================"
     
-    cd mobile
+    cd JoobyMobile
     
     # Android
     echo -e "${YELLOW}🤖 Fazendo build para Android...${NC}"
@@ -181,7 +181,7 @@ test_mobile() {
     echo -e "${BLUE}🧪 Testes do Mobile${NC}"
     echo "===================="
     
-    cd mobile
+    cd JoobyMobile
     
     # Testes unitários
     echo -e "${YELLOW}🧪 Executando testes unitários...${NC}"
@@ -200,7 +200,7 @@ clean_mobile() {
     echo -e "${BLUE}🧹 Limpeza do Mobile${NC}"
     echo "===================="
     
-    cd mobile
+    cd JoobyMobile
     
     # Limpar cache
     echo -e "${YELLOW}🗑️  Limpando cache...${NC}"
@@ -221,7 +221,7 @@ run_android() {
     echo -e "${BLUE}🤖 Executando no Android${NC}"
     echo "========================="
     
-    cd mobile
+    cd JoobyMobile
     npx react-native run-android
     cd ..
 }
@@ -231,7 +231,7 @@ run_ios() {
     echo -e "${BLUE}🍎 Executando no iOS${NC}"
     echo "====================="
     
-    cd mobile
+    cd JoobyMobile
     npx react-native run-ios
     cd ..
 }
